@@ -1,0 +1,300 @@
+#app {
+    width: 50vw;
+    height: 50vh;
+}
+
+#everything {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+#app {
+    width: 600px;
+    height: 600px;
+}
+
+#version-number {
+    position: absolute;
+    right: 10px;
+    padding: 0px;
+    top: 0px;
+}
+
+canvas {
+    background-size: 100%;
+    border: 1px solid #000;
+    position: relative;
+    border: 1px solid #000;
+    left: 0;
+    position: relative;
+    background-image: url('./assets/power-play-light.jpeg');
+    margin: 0;
+    width: inherit;
+    height: inherit;
+}
+
+body {
+    margin-left: 25px;
+    font-family: 'Lato', sans-serif;
+    background-color: rgb(248 250 252);
+    color: #BFC0C0;
+}
+
+#mains {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+
+#side-stuff {
+    position: relative;
+    display: flex;
+    flex-flow: column wrap;
+}
+
+#field-img {
+    height: 800px;
+    width: 800px;
+    border: 1px solid #000;
+    position: absolute;
+}
+
+#plug {
+    position: relative;
+    top: -5vh;
+}
+
+#banner {
+    position: relative;
+    top: -5vh;
+    font-weight: 100;
+    font-size: 3vw;
+    padding: 0;
+    margin: 0;
+    background-image: linear-gradient(120deg, transparent, rgba(146, 148, 248, 0.4), rgba(146, 148, 248, 0.8), transparent);
+    background-size: auto auto;
+    background-clip: border-box;
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textclip 2.5s linear infinite;
+    display: inline-block;
+}
+
+#info-panel-content {
+    display: flex;
+    flex-direction: column;
+}
+
+#info-panel-title {
+    font-family: 'Lato', sans-serif;
+    font-size: 3rem;
+}
+
+#info-panel {
+    font-family: 'Lato', sans-serif;
+    line-height: 0.5;
+    display: flex;
+    width: 300px;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-direction: column;
+    font-size: 1.5rem;
+    border: 2px solid #BFC0C0;
+    overflow: hidden;
+}
+
+#tensioning-slider {
+    width: 300px;
+}
+
+#compass {
+    position: relative;
+    left: -50vw;
+    width: 20vw;
+}
+
+.side-panel-children {
+    background-color: rgba(0, 0, 0, 0);
+    padding-left: 2vw;
+    border-width: 0px;
+    font-size: 75%;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+#export-button {
+    width: 100px;
+    height: 25px;
+    cursor: pointer;
+    position: relative;
+    left: 10px;
+    -index: 0;
+    border-radius: 5px;
+    top: -15px;
+    left: 20px;
+}
+
+#export-to-code {
+    position: relative;
+}
+
+#export-descriptor {
+    font-size: 1.5rem;
+}
+
+#export-text {
+    font-size: 1rem;
+    font-family: 'Courier-New', monospace;
+    width: 100vw;
+}
+
+#export-button:before {
+    content: '';
+    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing 20s linear infinite;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    border-radius: 10px;
+}
+
+#export-button:active {
+    color: #000;
+}
+
+#export-button:active:after {
+    background: transparent;
+}
+
+#export-button:hover:before {
+    opacity: 1;
+}
+
+.x,
+.y {
+    font-weight: 100;
+    font-family: 'Lato', sans-serif;
+}
+
+#export-button:after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #111;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+}
+
+.coord-button {
+    height: 40px;
+    width: 150px;
+    margin: 20px;
+    margin-left: 0px;
+}
+
+.side-glow {
+    overflow: hidden;
+}
+
+.common-style {
+    text-decoration: none;
+    border: 1px solid rgb(146, 148, 248);
+    position: relative;
+    display: inline-flex;
+    border: 2px solid #BFC0C0;
+    color: #BFC0C0;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    align-items: center;
+    justify-content: center;
+}
+
+#selection {
+    height: 40px;
+    width: 100px;
+    top: -15px;
+}
+
+#field-selection {
+    height: 40px;
+    width: 300px;
+}
+
+.side-glow:hover {
+    box-shadow: 1px 1px 25px 10px rgba(146, 148, 248, 0.4);
+}
+
+.side-glow:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient( 120deg, transparent, rgba(146, 148, 248, 0.4), transparent);
+    transition: all 650ms;
+}
+
+.side-glow:hover:before {
+    left: 100%;
+}
+
+#disclaimer {
+    font-size: 0.4rem;
+    text-transform: uppercase;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border: 2px solid red;
+    border-radius: 10px;
+    color: black;
+    background-color: rgba(255, 0, 77, 0.15);
+    white-space: nowrap;
+    display: inline-block;
+    overflow: auto;
+}
+
+#teaser {
+    position: relative;
+    bottom: -50vh;
+    font-size: 5px;
+}
+
+@keyframes glowing {
+    0% {
+        background-position: 0 0;
+    }
+    50% {
+        background-position: 400% 0;
+    }
+    100% {
+        background-position: 0 0;
+    }
+}
+
+@keyframes textclip {
+    to {
+        background-position: 200% center;
+    }
+}
