@@ -9,7 +9,7 @@ export default class HomeScreen extends Phaser.Scene {
 	pixels = []
 
 	constructor() {
-		super('hello-world');
+		super('test');
 	}
 
 	preload() {
@@ -72,7 +72,7 @@ export default class HomeScreen extends Phaser.Scene {
 		this.load.image('white-pixel', './white-pixel.png');
 		this.load.image('purple-pixel', './purple-pixel.png');
 		this.load.image('green-pixel', './green-pixel.png');
-		this.load.image('yellow-pixel', './yello-pixel.png');
+		this.load.image('yellow-pixel', './yellow-pixel.png');
 		this.load.image('red', '/particles/red.png');
 		this.load.image('blue', '/particles/blue.png');
 		for (let i = 0; i < 200; i++) this.load.image(generate(1)[0], '/8565CL.png');
@@ -80,7 +80,7 @@ export default class HomeScreen extends Phaser.Scene {
 
 	create() {
 		this.add.image(this.FIELD_DIMENSION, this.FIELD_DIMENSION, 'sky').setScale(2 * this.FIELD_DIMENSION / 2270, 2 * this.FIELD_DIMENSION / 2270).setAlpha(0.5);
-		this.matter.world.setGravity(0, 0);
+		this.matter.world.setGravity(0, 4);
 		this.matter.world.setBounds(0, 0, GameDimensions[0], GameDimensions[1]);
 
 		/* TODO: cycle out by next commit if not used
@@ -120,7 +120,7 @@ export default class HomeScreen extends Phaser.Scene {
 			pixel.updateBody(time, delta);
 		})
 
-		if (this.input.keyboard.checkDown(this.spawnKey)) this.pixels.push(new Pixel(GameDimensions[0] / 2, inchesToGamePixels(12), 'BLUE', this));
+		if (this.input.keyboard.checkDown(this.spawnKey, 100)) this.pixels.push(new Pixel(inchesToGamePixels(12), inchesToGamePixels(20), 'white', this));
 	}
 }
 

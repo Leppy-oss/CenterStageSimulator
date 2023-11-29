@@ -5,7 +5,7 @@ import { GameDimensions } from "./HomeScreen";
  * @returns The dimensions in pixels of the object as corresponding to the game/canvas
  */
 export function inchesToGamePixels(inches) {
-    return GameDimensions[0] / 144 * inches;
+	return GameDimensions[0] / 25.66 * inches;
 }
 
 /**
@@ -16,7 +16,7 @@ export function inchesToGamePixels(inches) {
  * @param {Number} heading - Heading to translate by, in RADIANS
  */
 export function angledTranslation(distance, x, y, heading) {
-    return [x + distance * Math.cos(heading), y + distance * Math.sin(heading)];
+	return [x + distance * Math.cos(heading), y + distance * Math.sin(heading)];
 }
 
 export const Vector2 = Phaser.Math.Vector2;
