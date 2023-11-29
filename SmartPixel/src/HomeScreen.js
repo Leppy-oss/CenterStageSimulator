@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { generate } from 'random-words'
 import { inchesToGamePixels, Vector2 } from './utils';
 import Pixel from './obj/Pixel';
+import Boundary from './obj/boundary';
 
 export default class HomeScreen extends Phaser.Scene {
 	FIELD_DIMENSION = GameDimensions[0] / 2;
@@ -110,6 +111,7 @@ export default class HomeScreen extends Phaser.Scene {
 			});
 			emitter.startFollow(robot.chassis);
 		});
+		new Boundary(this);
 
 		// logo.setDepth(1);
 	}
