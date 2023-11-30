@@ -5,7 +5,7 @@ import { GameDimensions } from "./HomeScreen";
  * @returns The dimensions in pixels of the object as corresponding to the game/canvas
  */
 export function inchesToGamePixels(inches) {
-	return GameDimensions[0] / 25.66 * inches;
+	return GameDimensions[0] / 20.96 * inches;
 }
 
 /**

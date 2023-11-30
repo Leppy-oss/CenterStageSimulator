@@ -133,7 +133,7 @@ export const PROGRESS_BAR_WIDTH = 320;
 export const PROGRESS_BAR_HEIGHT = 50;
 /** loading progress bar padding in px */
 export const PROGRESS_BAR_PADDING = 10;
-export const GameDimensions = [400, 640];
+export const GameDimensions = [400, 602];
 /** diameter in inches of the cone */
 export const CONE_DIAM = 4;
 export const CATEGORY_ROBOT_1 = 0;
