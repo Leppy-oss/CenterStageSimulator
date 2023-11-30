@@ -7,7 +7,8 @@ import Boundary from './obj/boundary';
 export default class HomeScreen extends Phaser.Scene {
 	FIELD_DIMENSION = GameDimensions[0] / 2;
 
-	pixels = []
+	pixels = [];
+	colors = ['white', 'green', 'yellow', 'purple'];
 
 	constructor() {
 		super('test');
@@ -122,7 +123,7 @@ export default class HomeScreen extends Phaser.Scene {
 			pixel.updateBody(time, delta);
 		})
 
-		if (this.input.keyboard.checkDown(this.spawnKey, 100)) this.pixels.push(new Pixel(inchesToGamePixels(12), inchesToGamePixels(20), 'white', this));
+		if (this.input.keyboard.checkDown(this.spawnKey, 100)) this.pixels.push(new Pixel(inchesToGamePixels(12), inchesToGamePixels(20), this.colors[Math.floor(Math.random() * this.colors.length)], this));
 	}
 }
 
