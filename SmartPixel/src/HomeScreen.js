@@ -98,6 +98,7 @@ export default class HomeScreen extends Phaser.Scene {
 		*/
 
 		this.spawnKey = this.input.keyboard.addKey(32); // space
+		this.resetKey = this.input.keyboard.addKey(82); // r
 
 		const redParticles = this.add.particles('red');
 		const blueParticles = this.add.particles('blue');
@@ -113,6 +114,9 @@ export default class HomeScreen extends Phaser.Scene {
 			emitter.startFollow(robot.chassis);
 		});
 		new Boundary(this);
+		document.querySelector('canvas').addEventListener('mousedown', (e) => {
+			this.pixels.push(new Pixel(e.clientX - document.querySelector('canvas').getBoundingClientRect().left, e.clientY - document.querySelector('canvas').getBoundingClientRect().top, this.colors[Math.floor(Math.random() * this.colors.length)], this));
+		});
 
 		// logo.setDepth(1);
 	}
@@ -123,7 +127,10 @@ export default class HomeScreen extends Phaser.Scene {
 			pixel.updateBody(time, delta);
 		})
 
-		if (this.input.keyboard.checkDown(this.spawnKey, 100)) this.pixels.push(new Pixel(inchesToGamePixels(12), inchesToGamePixels(20), this.colors[Math.floor(Math.random() * this.colors.length)], this));
+		// if (this.input.keyboard.checkDown(this.spawnKey, 100)) this.pixels = [];
+		if (this.input.keyboard.checkDown(this.resetKey, 250)) {
+			for (const pixel of this.pixels) this.matter.body.applyForce(pixel.body, { x: 0, y: 0 }, { x: Math.random() * 0.01, y: Math.random() * 0.01 });
+		}
 	}
 }
 
