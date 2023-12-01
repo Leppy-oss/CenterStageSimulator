@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { generate } from 'random-words'
-import { inchesToGamePixels, Vector2 } from './utils';
+import { inchesToGamePixels } from './utils';
 import Pixel from './obj/Pixel';
 import Boundary from './obj/boundary';
 
@@ -77,7 +77,7 @@ export default class HomeScreen extends Phaser.Scene {
 		this.load.image('yellow-pixel', './yellow-pixel.png');
 		this.load.image('red', '/particles/red.png');
 		this.load.image('blue', '/particles/blue.png');
-		for (let i = 0; i < 200; i++) this.load.image(generate(1)[0], '/8565CL.png');
+		// for (let i = 0; i < 200; i++) this.load.image(generate(1)[0], '/8565CL.png');
 	}
 
 	create() {
