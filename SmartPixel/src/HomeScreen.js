@@ -104,6 +104,7 @@ export default class HomeScreen extends Phaser.Scene {
 
 		this.spawnKey = this.input.keyboard.addKey(32); // space
 		this.resetKey = this.input.keyboard.addKey(82); // r
+		this.matter.add.image(GameDimensions[0] / 2, 200, 'logo');
 
 		const redParticles = this.add.particles('red');
 		const blueParticles = this.add.particles('blue');
