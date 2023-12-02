@@ -25,10 +25,7 @@ export default function Boundary(game) {
 		}));
 	}
 	*/
-	this.bodies.push(this.game.matter.bodies.fromVertices(this.boundary.x, this.boundary.y, [
-		parseVertex(0, 2.13), parseVertex(3, 0), parseVertex(4.5, 2.13)
-	]));
-	for (let i = 1; i < 6; i++) {
+	for (let i = 1; i < 7; i++) {
 		this.bodies.push(this.game.matter.bodies.polygon(this.boundary.x + i * inchesToGamePixels(3), this.boundary.y, 6, inchesToGamePixels(1.75)));
 	}
 	/*

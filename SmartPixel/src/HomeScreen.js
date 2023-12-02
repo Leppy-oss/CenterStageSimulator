@@ -77,7 +77,12 @@ export default class HomeScreen extends Phaser.Scene {
 		this.load.image('yellow-pixel', './yellow-pixel.png');
 		this.load.image('red', '/particles/red.png');
 		this.load.image('blue', '/particles/blue.png');
-		// for (let i = 0; i < 200; i++) this.load.image(generate(1)[0], '/8565CL.png');
+		this.load.audio('hit', './audio/hit.mp3');
+		this.load.audio('wow', './audio/wow.wav');
+		this.load.audio('bomb', './audio/bomb.mp3');
+		this.load.audio('welcome', './audio/welcome.wav');
+		this.load.audio('hitv2', './audio/hitv2.wav');
+		for (let i = 0; i < 200; i++) this.load.image(generate(1)[0], '/8565CL.png');
 	}
 
 	create() {
@@ -117,6 +122,10 @@ export default class HomeScreen extends Phaser.Scene {
 		document.querySelector('canvas').addEventListener('mousedown', (e) => {
 			this.pixels.push(new Pixel(e.clientX - document.querySelector('canvas').getBoundingClientRect().left, e.clientY - document.querySelector('canvas').getBoundingClientRect().top, this.colors[Math.floor(Math.random() * this.colors.length)], this));
 		});
+		this.matter.world.on('collisionend', (event, bodyA, bodyB) => {
+			this.sound.play('hitv2');
+		});
+		this.sound.play('welcome');
 
 		// logo.setDepth(1);
 	}
@@ -129,6 +138,7 @@ export default class HomeScreen extends Phaser.Scene {
 
 		// if (this.input.keyboard.checkDown(this.spawnKey, 100)) this.pixels = [];
 		if (this.input.keyboard.checkDown(this.resetKey, 250)) {
+			this.sound.play('bomb');
 			for (const pixel of this.pixels) this.matter.body.applyForce(pixel.body, { x: 0, y: 0 }, { x: Math.random() * 0.01, y: Math.random() * 0.01 });
 		}
 	}
