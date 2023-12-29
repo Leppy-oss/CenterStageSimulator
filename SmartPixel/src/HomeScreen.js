@@ -89,6 +89,8 @@ export default class HomeScreen extends Phaser.Scene {
 		this.add.image(this.FIELD_DIMENSION, this.FIELD_DIMENSION, 'sky').setScale(2 * this.FIELD_DIMENSION / 2270, 2 * this.FIELD_DIMENSION / 2270).setAlpha(0.5);
 		this.matter.world.setGravity(0, 4);
 		this.matter.world.setBounds(0, 0, GameDimensions[0], GameDimensions[1]);
+		this.matter.world.engine.positionIterations = 20;
+		this.matter.world.engine.velocityIterations = 20;
 
 		/* TODO: cycle out by next commit if not used
 		const walls = this.matter.world.walls;
