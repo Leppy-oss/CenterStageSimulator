@@ -19,6 +19,7 @@ export default function Pixel(x, y, color, game) {
 	this.body = this.game.matter.bodies.polygon(this.x, this.y, 6, inchesToGamePixels(pixelWidth) / 2);
 	this.pixel.update();
 	this.body.restitution = 0.5;
+	this.body.friction = 0;
 	this.body.density = 1;
 	// this.body.angle = Math.PI / 2;
 	this.pixel.setExistingBody(this.body);

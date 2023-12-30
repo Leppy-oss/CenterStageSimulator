@@ -9,6 +9,7 @@ export default class HomeScreen extends Phaser.Scene {
 
 	pixels = [];
 	colors = ['white', 'green', 'yellow', 'purple'];
+	currPixelIndex = 0;
 
 	constructor() {
 		super('test');
@@ -89,8 +90,9 @@ export default class HomeScreen extends Phaser.Scene {
 		this.add.image(this.FIELD_DIMENSION, this.FIELD_DIMENSION, 'sky').setScale(2 * this.FIELD_DIMENSION / 2270, 2 * this.FIELD_DIMENSION / 2270).setAlpha(0.5);
 		this.matter.world.setGravity(0, 4);
 		this.matter.world.setBounds(0, 0, GameDimensions[0], GameDimensions[1]);
-		this.matter.world.engine.positionIterations = 20;
-		this.matter.world.engine.velocityIterations = 20;
+		this.matter.world.engine.positionIterations = 50;
+		this.matter.world.engine.velocityIterations = 50;
+		this.matter.world.engine.constraintIterations = 50;
 
 		/* TODO: cycle out by next commit if not used
 		const walls = this.matter.world.walls;
@@ -105,8 +107,8 @@ export default class HomeScreen extends Phaser.Scene {
 		*/
 
 		this.spawnKey = this.input.keyboard.addKey(32); // space
+		this.cycleKey = this.input.keyboard.addKey(67); // c
 		this.resetKey = this.input.keyboard.addKey(82); // r
-		this.matter.add.image(GameDimensions[0] / 2, 200, 'logo');
 
 		const redParticles = this.add.particles('red');
 		const blueParticles = this.add.particles('blue');
@@ -125,7 +127,7 @@ export default class HomeScreen extends Phaser.Scene {
 		document.querySelector('canvas').addEventListener('mousedown', (e) => {
 			this.pixels.push(new Pixel(e.clientX - document.querySelector('canvas').getBoundingClientRect().left, e.clientY - document.querySelector('canvas').getBoundingClientRect().top, this.colors[Math.floor(Math.random() * this.colors.length)], this));
 		});
-		this.matter.world.on('collisionend', (event, bodyA, bodyB) => {
+		this.matter.world.on('collisionstart', (event, bodyA, bodyB) => {
 			this.sound.play('hitv2');
 		});
 		this.sound.play('welcome');
