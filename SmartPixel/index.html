@@ -11,8 +11,9 @@
     <link href='https://fonts.googleapis.com/css2?family=Lato:wght@100;300&display=swap' rel='stylesheet'>
     <title>Centerstage Smart Pixel Dropping</title>
     <meta charset='UTF-8'>
-    <meta name='description' content='Centerstage smart pixel dropping'>
-    <meta name='keywords' content='FTC, first, tech, challenge, centerstage, center, stage, leppy, pixel, mosaic, dropping, smart'>
+    <meta name='description' content='Centerstage pixel dropping simulator'>
+    <meta name='keywords'
+        content='FTC, first, tech, challenge, centerstage, center, stage, leppy, pixel, mosaic, dropping, smart'>
     <meta name='author' content='Leppy'>
     <!-- CDNjs imports -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
@@ -36,8 +37,24 @@
                 <h1 id='welcome-text'>Welcome to the Centerstage Smart Pixel Dropper!</h1>
             </div>
             <h1 id='plug'>The world's premiere Centerstage smart pixel dropping simulator</h1>
-            <div id="app"></div>
             <script type="module" src="src/main.js"></script>
+            <div id='sideways-align'>
+                <div id="app"></div>
+                <div id='side-stuff'>
+                    <div id='info-panel-content'>
+                        <h1 id='info-panel-title'>Controls</h1>
+                        <div id='info-panel' class='common-style'>
+                            <p class='side-panel-children'><span class='side-panel-highlight'>SPACE: </span>Reset all pixels</p>
+                            <p class='side-panel-children'><span class='side-panel-highlight'>W/A/S/D: </span>Manipulate the left pixel</p>
+                            <p class='side-panel-children'><span class='side-panel-highlight'>I/J/K/L: </span>Manipulate the Right pixel</p>
+                            <p class='side-panel-children'><span class='side-panel-highlight'>Left/Right Click: </span>Drop the corresponding pixel</p>
+                            <input style='visibility: hidden' type='range' min='-360' max='360' step='0.001' value='0'
+                                class='heading-slider' id='heading-slider'>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 </body>
 

@@ -79,7 +79,7 @@ body {
     font-family: 'Lato', sans-serif;
     line-height: 0.5;
     display: flex;
-    width: 300px;
+    width: 30vw;
     justify-content: space-between;
     align-items: baseline;
     flex-direction: column;
@@ -100,9 +100,15 @@ body {
 
 .side-panel-children {
     background-color: rgba(0, 0, 0, 0);
-    padding-left: 2vw;
+    padding-left: 1%;
     border-width: 0px;
+    line-height: normal;
     font-size: 75%;
+}
+
+.side-panel-highlight {
+    color: #e640d5;
+    font-weight: bold;
 }
 
 input[type=number]::-webkit-inner-spin-button,
