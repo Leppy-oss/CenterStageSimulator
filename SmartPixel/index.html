@@ -31,25 +31,37 @@
 
 <body>
     <main>
-        <h2 id='version-number'>v0.0.1</h2>
+        <h2 id='version-number'>v0.1.7</h2>
         <div id='everything'>
             <div id='banner'>
-                <h1 id='welcome-text'>Welcome to the Centerstage Smart Pixel Dropper!</h1>
+                <h1 id='welcome-text'>Welcome to the Centerstage Pixel Dropping Simulator!</h1>
             </div>
-            <h1 id='plug'>The world's premiere Centerstage smart pixel dropping simulator</h1>
+            <h1 id='plug'>The world's premiere centerstage pixel dropping simulator</h1>
             <script type="module" src="src/main.js"></script>
             <div id='sideways-align'>
                 <div id="app"></div>
                 <div id='side-stuff'>
-                    <div id='info-panel-content'>
-                        <h1 id='info-panel-title'>Controls</h1>
-                        <div id='info-panel' class='common-style'>
+                    <div class='info-panel-content'>
+                        <h1 class='info-panel-title'>Controls</h1>
+                        <div class='info-panel' class='common-style'>
                             <p class='side-panel-children'><span class='side-panel-highlight'>SPACE: </span>Reset all pixels</p>
+                            <p class='side-panel-children'><span class='side-panel-highlight'>R: </span>Hit/disturb the backdrop</p>
                             <p class='side-panel-children'><span class='side-panel-highlight'>W/A/S/D: </span>Manipulate the left pixel</p>
                             <p class='side-panel-children'><span class='side-panel-highlight'>I/J/K/L: </span>Manipulate the Right pixel</p>
-                            <p class='side-panel-children'><span class='side-panel-highlight'>Left/Right Click: </span>Drop the corresponding pixel</p>
-                            <input style='visibility: hidden' type='range' min='-360' max='360' step='0.001' value='0'
-                                class='heading-slider' id='heading-slider'>
+                            <p class='side-panel-children'><span class='side-panel-highlight'>LEFT/RIGHT CLICK: </span>Drop the corresponding pixel</p>
+                            <p class='side-panel-children'><span class='side-panel-highlight'>LEFT/RIGHT ARROW: </span>Cycles through colors for the corresponding pixel</p>
+                        </div>
+                    </div>
+                </div>
+                <div id='side-stuff'>
+                    <div class='info-panel-content'>
+                        <h1 class='info-panel-title'>Constraints</h1>
+                        <div class='info-panel' class='common-style'>
+                            <ul class='side-panel-list'>
+                                <li>Both pixels must be dropped before a new cycle can take place.</li>
+                                <li>The left and right pixels have a limited "closeness" due to real-world constraints of the claw thickness.</li>
+                                <li>To simulate real-world cycles, pixel colors cannot be changed after dropping the first pixel. Decide what pixels to place before dropping them!</li>
+                            </ul>
                         </div>
                     </div>
                 </div>

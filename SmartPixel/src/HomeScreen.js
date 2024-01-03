@@ -28,6 +28,7 @@ export default class HomeScreen extends Phaser.Scene {
 		y: 0
 	};
 	modSpeed = 0.15;
+	hitSoundBtn;
 
 	constructor() {
 		super('test');
@@ -176,10 +177,14 @@ export default class HomeScreen extends Phaser.Scene {
 		this.sound.play('welcome');
 		this.leftPixel = this.createNewPixel(true);
 		this.rightPixel = this.createNewPixel(false);
-		
-		this.add.existing(new TextButton(this, GameDimensions[0] - 175, 25, 'Disable Hit Sound', { fill: '#0f0' }, () => this.hitSoundEnabled = !this.hitSoundEnabled, () => this.hoveringButton = true, () => this.hoveringButton = false));
+
+		this.hitSoundBtn = new TextButton(this, GameDimensions[0] - 200, 25, 'Disable Bounce Sound', { fill: '#0f0' }, () => {
+			this.hitSoundEnabled = !this.hitSoundEnabled;
+			this.changeHitSoundBtnText();
+		}, () => this.hoveringButton = true, () => this.hoveringButton = false);
+		this.add.existing(this.hitSoundBtn);
 		this.add.existing(new TextButton(this, 25, 25, 'Reset', { fill: '#0f0' }, () => this.reset(), () => this.hoveringButton = true, () => this.hoveringButton = false));
-		
+
 		this.add.existing(new TextButton(this, 325, 50, 'White', { fill: '#0f0' }, () => this.changeRightColor(0), () => this.hoveringButton = true, () => this.hoveringButton = false));
 		this.add.existing(new TextButton(this, 325, 75, 'Purple', { fill: '#0f0' }, () => this.changeRightColor(1), () => this.hoveringButton = true, () => this.hoveringButton = false));
 		this.add.existing(new TextButton(this, 325, 100, 'Green', { fill: '#0f0' }, () => this.changeRightColor(2), () => this.hoveringButton = true, () => this.hoveringButton = false));
@@ -191,6 +196,11 @@ export default class HomeScreen extends Phaser.Scene {
 		this.add.existing(new TextButton(this, 25, 125, 'Yellow', { fill: '#0f0' }, () => this.changeLeftColor(3), () => this.hoveringButton = true, () => this.hoveringButton = false));
 
 		// logo.setDepth(1);
+	}
+
+	changeHitSoundBtnText() {
+		if (this.hitSoundEnabled) this.hitSoundBtn.text = 'Disable Bounce Sound';
+		else this.hitSoundBtn.text = 'Enable Bounce Sound';
 	}
 
 	changeLeftColor(newColorIndex) {
@@ -245,15 +255,17 @@ export default class HomeScreen extends Phaser.Scene {
 		if (this.input.keyboard.checkDown(this.rightKeyRight)) this.rightPixelOffset.x += this.modSpeed * delta
 		if (this.input.keyboard.checkDown(this.upKeyRight)) this.rightPixelOffset.y -= this.modSpeed * delta
 		if (this.input.keyboard.checkDown(this.downKeyRight)) this.rightPixelOffset.y += this.modSpeed * delta
-		if (this.input.keyboard.checkDown(this.cycleKeyLeft, 250)) {
-			if (this.currColorLeft < this.colors.length - 1) this.currColorLeft++;
-			else this.currColorLeft = 0;
-			this.leftPixel.updateColor(this.colors[this.currColorLeft]);
-		}
-		if (this.input.keyboard.checkDown(this.cycleKeyRight, 250)) {
-			if (this.currColorRight < this.colors.length - 1) this.currColorRight++;
-			else this.currColorRight = 0;
-			this.rightPixel.updateColor(this.colors[this.currColorRight]);
+		if (this.leftPixel != null && this.rightPixel != null) {
+			if (this.input.keyboard.checkDown(this.cycleKeyLeft, 250)) {
+				if (this.currColorLeft < this.colors.length - 1) this.currColorLeft++;
+				else this.currColorLeft = 0;
+				this.leftPixel.updateColor(this.colors[this.currColorLeft]);
+			}
+			if (this.input.keyboard.checkDown(this.cycleKeyRight, 250)) {
+				if (this.currColorRight < this.colors.length - 1) this.currColorRight++;
+				else this.currColorRight = 0;
+				this.rightPixel.updateColor(this.colors[this.currColorRight]);
+			}
 		}
 	}
 }
