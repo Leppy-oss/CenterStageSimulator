@@ -102,7 +102,7 @@ export default class HomeScreen extends Phaser.Scene {
 		this.load.audio('bomb', './audio/bomb.mp3');
 		this.load.audio('welcome', './audio/welcome.wav');
 		this.load.audio('hitv3', './audio/bounce.mp3');
-		for (let i = 0; i < 200; i++) this.load.image(generate(1)[0], '/8565CL.png');
+		for (let i = 0; i < 30; i++) this.load.image(generate(1)[0], '/8565CL.png');
 	}
 
 	createNewPixel(left) {
