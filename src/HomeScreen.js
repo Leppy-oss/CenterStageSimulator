@@ -1,6 +1,30 @@
+/**
+ *  _____  _____ _   _ _____ ___________  _____ _____ ___  _____  _____   _____ ________  ____   _ _       ___ _____ ___________ 
+ * /  __ \|  ___| \ | |_   _|  ___| ___ \/  ___|_   _/ _ \|  __ \|  ___| /  ___|_   _|  \/  | | | | |     / _ \_   _|  _  | ___ \
+ * | /  \/| |__ |  \| | | | | |__ | |_/ /\ `--.  | |/ /_\ \ |  \/| |__   \ `--.  | | | .  . | | | | |    / /_\ \| | | | | | |_/ /
+ * | |    |  __|| . ` | | | |  __||    /  `--. \ | ||  _  | | __ |  __|   `--. \ | | | |\/| | | | | |    |  _  || | | | | |    / 
+ * | \__/\| |___| |\  | | | | |___| |\ \ /\__/ / | || | | | |_\ \| |___  /\__/ /_| |_| |  | | |_| | |____| | | || | \ \_/ / |\ \ 
+ * \____/\____/\_| \_/ \_/ \____/\_| \_|\____/  \_/\_| |_/\____/\____/  \____/ \___/\_|  |_/\___/\_____/\_| |_/\_/  \___/\_| \_|
+ *                                                                                                                               
+ *                                                                                                                            
+ * ______              _     _____         _           _      _           _         _____  _____  ____  _____                    
+ * | ___ \            | |   |_   _|       | |         (_)    | |         | |       |  _  ||  ___|/ ___||  ___|                   
+ * | |_/ / __ ___   __| |     | | ___  ___| |__  _ __  _  ___| |__   ___ | |_ ___   \ V / |___ \/ /___ |___ \                    
+ * |  __/ '__/ _ \ / _` |     | |/ _ \/ __| '_ \| '_ \| |/ __| '_ \ / _ \| __/ __|  / _ \     \ \ ___ \    \ \                   
+ * | |  | | | (_) | (_| |_    | |  __/ (__| | | | | | | | (__| |_) | (_) | |_\__ \ | |_| |/\__/ / \_/ |/\__/ /                   
+ * \_|  |_|  \___/ \__,_(_)   \_/\___|\___|_| |_|_| |_|_|\___|_.__/ \___/ \__|___/ \_____/\____/\_____/\____/                    
+ *                                                                                                                           
+ *                                                                                                                            
+ *  _____  _____  _____   ___                                                                                                    
+ * / __  \|  _  |/ __  \ /   |                                                                                                   
+ * `' / /'| |/' |`' / /'/ /| |                                                                                                   
+ *   / /  |  /| |  / / / /_| |                                                                                                   
+ * ./ /___\ |_/ /./ /__\___  |                                                                                                   
+ * \_____/ \___/ \_____/   |_/                                                                                                                         
+ */
+
 import Phaser from 'phaser';
 import { generate } from 'random-words'
-import { inchesToGamePixels } from './utils';
 import Pixel from './obj/Pixel';
 import Boundary from './obj/boundary';
 import { TextButton } from './obj/TextButton';
@@ -95,8 +119,7 @@ export default class HomeScreen extends Phaser.Scene {
 		this.load.image('purple-pixel', './purple-pixel.png');
 		this.load.image('green-pixel', './green-pixel.png');
 		this.load.image('yellow-pixel', './yellow-pixel.png');
-		this.load.image('red', '/particles/red.png');
-		this.load.image('blue', '/particles/blue.png');
+		for (const color of this.colors) this.load.image(color, '/particles/'.concat(color).concat('.png'));
 		this.load.audio('hit', './audio/hit.mp3');
 		this.load.audio('wow', './audio/wow.wav');
 		this.load.audio('bomb', './audio/bomb.mp3');
@@ -117,10 +140,10 @@ export default class HomeScreen extends Phaser.Scene {
 		this.matter.world.engine.velocityIterations = 100;
 		this.matter.world.engine.constraintIterations = 100;
 
-		this.resetKey = this.input.keyboard.addKey(32); // space
+		this.resetKey = this.input.keyboard.addKey(82); // r
+		this.hitKey = this.input.keyboard.addKey(32); // space
 		this.cycleKeyLeft = this.input.keyboard.addKey(37); // left arrow
 		this.cycleKeyRight = this.input.keyboard.addKey(39); // left arrow
-		this.hitKey = this.input.keyboard.addKey(82); // r
 
 		this.leftKeyLeft = this.input.keyboard.addKey(65); // a
 		this.rightKeyLeft = this.input.keyboard.addKey(68); // d
@@ -194,8 +217,6 @@ export default class HomeScreen extends Phaser.Scene {
 		this.add.existing(new TextButton(this, 25, 75, 'Purple', { fill: '#0f0' }, () => this.changeLeftColor(1), () => this.hoveringButton = true, () => this.hoveringButton = false));
 		this.add.existing(new TextButton(this, 25, 100, 'Green', { fill: '#0f0' }, () => this.changeLeftColor(2), () => this.hoveringButton = true, () => this.hoveringButton = false));
 		this.add.existing(new TextButton(this, 25, 125, 'Yellow', { fill: '#0f0' }, () => this.changeLeftColor(3), () => this.hoveringButton = true, () => this.hoveringButton = false));
-
-		// logo.setDepth(1);
 	}
 
 	changeHitSoundBtnText() {
@@ -205,12 +226,12 @@ export default class HomeScreen extends Phaser.Scene {
 
 	changeLeftColor(newColorIndex) {
 		this.currColorLeft = newColorIndex;
-		this.leftPixel.updateColor(this.colors[this.currColorLeft]);
+		if (this.leftPixel != null && this.rightPixel != null) this.leftPixel.updateColor(this.colors[this.currColorLeft]);
 	}
 
 	changeRightColor(newColorIndex) {
 		this.currColorRight = newColorIndex;
-		this.rightPixel.updateColor(this.colors[this.currColorRight]);
+		if (this.leftPixel != null && this.rightPixel != null) this.rightPixel.updateColor(this.colors[this.currColorRight]);
 	}
 
 	reset() {
@@ -220,6 +241,10 @@ export default class HomeScreen extends Phaser.Scene {
 		this.pixels = [];
 		this.changeLeftColor(0);
 		this.changeRightColor(0);
+		if (this.leftPixel != null) this.leftPixel.destroy();
+		if (this.rightPixel != null) this.rightPixel.destroy();
+		this.leftPixel = this.createNewPixel(true);
+		this.rightPixel = this.createNewPixel(false);
 	}
 
 	update(time, delta) {
@@ -236,7 +261,7 @@ export default class HomeScreen extends Phaser.Scene {
 			this.rightPixel.lockTo(this.mouseX + this.rightPixelOffset.x, this.mouseY + this.rightPixelOffset.y);
 		}
 
-		if (this.input.keyboard.checkDown(this.resetKey, 100)) this.reset();
+		if (this.input.keyboard.checkDown(this.resetKey, 1000)) this.reset();
 		if (this.input.keyboard.checkDown(this.hitKey, 250)) {
 			this.sound.play('bomb');
 			this.pixels.forEach(pixel => {
