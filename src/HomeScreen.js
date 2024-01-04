@@ -115,6 +115,7 @@ export default class HomeScreen extends Phaser.Scene {
 		});
 
 		this.load.image('logo', '/8565CL.png');
+		this.load.image('backdrop', '/backdrop.png');
 		this.load.image('white-pixel', './white-pixel.png');
 		this.load.image('purple-pixel', './purple-pixel.png');
 		this.load.image('green-pixel', './green-pixel.png');
@@ -155,6 +156,7 @@ export default class HomeScreen extends Phaser.Scene {
 		this.upKeyRight = this.input.keyboard.addKey(73); //i
 		this.downKeyRight = this.input.keyboard.addKey(75); // k
 
+		this.add.image(GameDimensions[0] / 2, GameDimensions[1] / 2, 'backdrop').setDisplaySize(GameDimensions[0], GameDimensions[1]);
 		this.add.image(GameDimensions[0] - 25, GameDimensions[1] / 2, 'logo').setScale(0.25, 0.25).setRotation(-Math.PI / 2);
 		new Boundary(this);
 		document.querySelector('canvas').addEventListener('mousemove', (e) => {

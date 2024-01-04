@@ -7,7 +7,7 @@ import { GameDimensions } from "../HomeScreen";
  */
 export default function Boundary(game) {
 	this.game = game;
-	this.boundary = this.game.matter.add.image(0, GameDimensions[1] - inchesToGamePixels(2), 'white-pixel').setDisplaySize(2, 3);
+	this.boundary = this.game.matter.add.image(-inchesToGamePixels(1.5), GameDimensions[1] + 15, 'white-pixel').setDisplaySize(2, 3);
 	this.bodies = [];
 	/*
 	this.vertices = [parseVertex(0, -2.13)];
@@ -25,9 +25,11 @@ export default function Boundary(game) {
 		}));
 	}
 	*/
-	for (let i = 1; i < 7; i++) {
-		this.bodies.push(this.game.matter.bodies.polygon(this.boundary.x + i * inchesToGamePixels(3), this.boundary.y, 6, inchesToGamePixels(1.75)));
+	for (let i = 1; i < 8; i++) {
+		this.bodies.push(this.game.matter.bodies.polygon(this.boundary.x + i * 400/7, this.boundary.y, 6, 400/14*3.5/3));
 	}
+	this.bodies.push(this.game.matter.bodies.polygon(this.boundary.x + inchesToGamePixels(1.5), this.boundary.y - inchesToGamePixels(1.75 / 2), 6, inchesToGamePixels(1.75)));
+	this.bodies.push(this.game.matter.bodies.polygon(this.boundary.x + 15 * inchesToGamePixels(1.5), this.boundary.y - inchesToGamePixels(1.75 / 2), 6, inchesToGamePixels(1.75)));
 	/*
 	this.body = this.game.matter.bodies.fromVertices(this.boundary.x, this.boundary.y, [
 		this.vertices
