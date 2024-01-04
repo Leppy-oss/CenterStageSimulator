@@ -96,16 +96,16 @@ export default class HomeScreen extends Phaser.Scene {
 		});
 		assetText.setOrigin(0.5, 0.5);
 
-		this.load.on('progress', function (value) {
+		this.load.on('progress', function(value) {
 			percentText.setText(Math.round(value * 100) + '%');
 			progressBar.clear();
 			progressBar.fillStyle(0xffffff, 1);
 			progressBar.fillRect((GameDimensions[0] - PROGRESS_BAR_WIDTH + PROGRESS_BAR_PADDING) / 2, (GameDimensions[1] - PROGRESS_BAR_HEIGHT + PROGRESS_BAR_PADDING) / 2, (PROGRESS_BAR_WIDTH - 2 * PROGRESS_BAR_HEIGHT) * value, PROGRESS_BAR_HEIGHT - PROGRESS_BAR_PADDING);
 		});
-		this.load.on('fileprogress', function (file) {
+		this.load.on('fileprogress', function(file) {
 			assetText.setText('Loading asset: ' + file.key);
 		});
-		this.load.on('complete', function () {
+		this.load.on('complete', function() {
 			console.log('Finished loading assets');
 			progressBar.destroy();
 			progressBox.destroy();
@@ -126,6 +126,10 @@ export default class HomeScreen extends Phaser.Scene {
 		this.load.audio('bomb', './audio/bomb.mp3');
 		this.load.audio('welcome', './audio/welcome.wav');
 		this.load.audio('hitv3', './audio/bounce.mp3');
+		this.load.audio('change-color', './audio/change-color.wav');
+		this.load.audio('change-color-failed', './audio/change-color-failed.wav');
+		this.load.audio('reset', './audio/reset.wav');
+		this.load.audio('toggle', './audio/toggle.wav');
 		for (let i = 0; i < 30; i++) this.load.image(generate(1)[0], '/8565CL.png');
 	}
 
@@ -173,8 +177,7 @@ export default class HomeScreen extends Phaser.Scene {
 						y: 0
 					};
 					this.leftPixel = null;
-				}
-				else if (e.button == 2 && this.rightPixel != null) {
+				} else if (e.button == 2 && this.rightPixel != null) {
 					this.rightPixel.drop();
 					this.pixels.push(this.rightPixel);
 					this.rightPixelOffset = {
@@ -193,7 +196,7 @@ export default class HomeScreen extends Phaser.Scene {
 				}
 			}
 		});
-		document.addEventListener("contextmenu", function (e) {
+		document.addEventListener("contextmenu", function(e) {
 			e.preventDefault();
 		}, false);
 		this.matter.world.on('collisionstart', (event, bodyA, bodyB) => {
@@ -224,16 +227,23 @@ export default class HomeScreen extends Phaser.Scene {
 	changeHitSoundBtnText() {
 		if (this.hitSoundEnabled) this.hitSoundBtn.text = 'Disable Bounce Sound';
 		else this.hitSoundBtn.text = 'Enable Bounce Sound';
+		this.sound.play('toggle');
 	}
 
-	changeLeftColor(newColorIndex) {
+	changeLeftColor(newColorIndex, playSound = true) {
 		this.currColorLeft = newColorIndex;
-		if (this.leftPixel != null && this.rightPixel != null) this.leftPixel.updateColor(this.colors[this.currColorLeft]);
+		if (this.leftPixel != null && this.rightPixel != null) {
+			this.leftPixel.updateColor(this.colors[this.currColorLeft]);
+			if (playSound) this.sound.play('change-color');
+		} else if (playSound) this.sound.play('change-color-failed');
 	}
 
-	changeRightColor(newColorIndex) {
+	changeRightColor(newColorIndex, playSound = true) {
 		this.currColorRight = newColorIndex;
-		if (this.leftPixel != null && this.rightPixel != null) this.rightPixel.updateColor(this.colors[this.currColorRight]);
+		if (this.leftPixel != null && this.rightPixel != null) {
+			this.rightPixel.updateColor(this.colors[this.currColorRight]);
+			if (playSound) this.sound.play('change-color');
+		} else if (playSound) this.sound.play('change-color-failed');
 	}
 
 	reset() {
@@ -241,12 +251,13 @@ export default class HomeScreen extends Phaser.Scene {
 			pixel.destroy();
 		});
 		this.pixels = [];
-		this.changeLeftColor(0);
-		this.changeRightColor(0);
+		this.changeLeftColor(0, false);
+		this.changeRightColor(0, false);
 		if (this.leftPixel != null) this.leftPixel.destroy();
 		if (this.rightPixel != null) this.rightPixel.destroy();
 		this.leftPixel = this.createNewPixel(true);
 		this.rightPixel = this.createNewPixel(false);
+		this.sound.play('reset');
 	}
 
 	update(time, delta) {

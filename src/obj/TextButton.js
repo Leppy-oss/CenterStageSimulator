@@ -1,32 +1,37 @@
 export class TextButton extends Phaser.GameObjects.Text {
-    constructor(scene, x, y, text, style, clickCallback, hoverCallback, exitHoverCallback = function() {}) {
-        super(scene, x, y, text, style);
+	constructor(game, x, y, text, style, clickCallback, hoverCallback, exitHoverCallback = function() {}) {
+		super(game, x, y, text, style);
+		this.setStyle({
+			FontFace: 'Lato'
+		})
+		this.game = game;
 
-        this.setInteractive({ useHandCursor: true })
-            .on('pointerover', () => {
-                this.enterButtonHoverState();
-                hoverCallback();
-            })
-            .on('pointerout', () => {
-                this.enterButtonRestState()
-                exitHoverCallback();
-            })
-            .on('pointerdown', () => this.enterButtonActiveState())
-            .on('pointerup', () => {
-                this.enterButtonHoverState();
-                clickCallback();
-            });
-    }
+		this.setInteractive({ useHandCursor: true })
+			.on('pointerover', () => {
+				this.enterButtonHoverState();
+				hoverCallback();
+			})
+			.on('pointerout', () => {
+				this.enterButtonRestState()
+				exitHoverCallback();
+			})
+			.on('pointerdown', () => this.enterButtonActiveState())
+			.on('pointerup', () => {
+				this.setStyle({ fill: '#ff0' });
+				clickCallback();
+			});
+	}
 
-    enterButtonHoverState() {
-        this.setStyle({ fill: '#ff0' });
-    }
+	enterButtonHoverState() {
+		this.game.sound.play('wow');
+		this.setStyle({ fill: '#ff0' });
+	}
 
-    enterButtonRestState() {
-        this.setStyle({ fill: '#0f0' });
-    }
+	enterButtonRestState() {
+		this.setStyle({ fill: '#0f0' });
+	}
 
-    enterButtonActiveState() {
-        this.setStyle({ fill: '#0ff' });
-    }
+	enterButtonActiveState() {
+		this.setStyle({ fill: '#0ff' });
+	}
 }
