@@ -29,6 +29,7 @@ import Pixel from './obj/Pixel';
 import Boundary from './obj/boundary';
 import { TextButton } from './obj/TextButton';
 import { checkScore } from './score-checker';
+import { numberToColorHsl } from './utils';
 
 export default class HomeScreen extends Phaser.Scene {
 	FIELD_DIMENSION = GameDimensions[0] / 2;
@@ -106,16 +107,16 @@ export default class HomeScreen extends Phaser.Scene {
 		});
 		assetText.setOrigin(0.5, 0.5);
 
-		this.load.on('progress', function(value) {
+		this.load.on('progress', function (value) {
 			percentText.setText(Math.round(value * 100) + '%');
 			progressBar.clear();
 			progressBar.fillStyle(0xffffff, 1);
 			progressBar.fillRect((GameDimensions[0] - PROGRESS_BAR_WIDTH + PROGRESS_BAR_PADDING) / 2, (GameDimensions[1] - PROGRESS_BAR_HEIGHT + PROGRESS_BAR_PADDING) / 2, (PROGRESS_BAR_WIDTH - 2 * PROGRESS_BAR_HEIGHT) * value, PROGRESS_BAR_HEIGHT - PROGRESS_BAR_PADDING);
 		});
-		this.load.on('fileprogress', function(file) {
+		this.load.on('fileprogress', function (file) {
 			assetText.setText('Loading asset: ' + file.key);
 		});
-		this.load.on('complete', function() {
+		this.load.on('complete', function () {
 			console.log('Finished loading assets');
 			progressBar.destroy();
 			progressBox.destroy();
@@ -206,15 +207,11 @@ export default class HomeScreen extends Phaser.Scene {
 				}
 			}
 		});
-		document.addEventListener("contextmenu", function(e) {
+		document.addEventListener("contextmenu", function (e) {
 			e.preventDefault();
 		}, false);
 		this.matter.world.on('collisionend', (event, bodyA, bodyB) => {
-			const scoreBreakdown = checkScore(this.pixels);
-			document.getElementById('num-pixels-text').innerHTML = scoreBreakdown.npixels.toString();
-			document.getElementById('num-mosaics-text').innerHTML = scoreBreakdown.nmosaics.toString();
-			document.getElementById('num-lines-text').innerHTML = scoreBreakdown.nlines.toString();
-			document.getElementById('total-score-text').innerHTML = (3 * scoreBreakdown.npixels + 10 * (scoreBreakdown.nmosaics + scoreBreakdown.nlines)).toString();
+			this.calcScore();
 			if (this.hitSoundEnabled) this.sound.play('hitv3');
 		});
 		this.sound.play('welcome');
@@ -243,6 +240,18 @@ export default class HomeScreen extends Phaser.Scene {
 		this.add.existing(new TextButton(this, 25, minTextY + 4 * textYGap, 'Yellow', { fill: '#0f0' }, () => this.changeLeftColor(3), () => this.hoveringButton = true, () => this.hoveringButton = false));
 	}
 
+	calcScore() {
+		const scoreBreakdown = checkScore(this.pixels);
+		document.getElementById('num-pixels-text').innerHTML = scoreBreakdown.npixels.toString();
+		document.getElementById('num-pixels-text').style.color = numberToColorHsl(scoreBreakdown.npixels, 5, 10);
+		document.getElementById('num-mosaics-text').innerHTML = scoreBreakdown.nmosaics.toString();
+		document.getElementById('num-mosaics-text').style.color = numberToColorHsl(scoreBreakdown.nmosaics, 0.1, 4);
+		document.getElementById('num-lines-text').innerHTML = scoreBreakdown.nlines.toString();
+		document.getElementById('num-lines-text').style.color = numberToColorHsl(scoreBreakdown.nlines, 0.1, 2);
+		document.getElementById('total-score-text').innerHTML = (3 * scoreBreakdown.npixels + 10 * (scoreBreakdown.nmosaics + scoreBreakdown.nlines)).toString();
+		document.getElementById('total-score-text').style.color = numberToColorHsl(3 * scoreBreakdown.npixels + 10 * (scoreBreakdown.nmosaics + scoreBreakdown.nlines), 20, 60);
+	}
+
 	changeHitSoundBtnText() {
 		if (this.hitSoundEnabled) this.hitSoundBtn.text = 'Disable Bounce Sound';
 		else this.hitSoundBtn.text = 'Enable Bounce Sound';
@@ -269,7 +278,6 @@ export default class HomeScreen extends Phaser.Scene {
 		this.pixels.forEach(pixel => {
 			pixel.destroy();
 		});
-		this.pixels = [];
 		this.changeLeftColor(0, false);
 		this.changeRightColor(0, false);
 		if (this.leftPixel != null) this.leftPixel.destroy();
@@ -277,12 +285,19 @@ export default class HomeScreen extends Phaser.Scene {
 		this.leftPixel = this.createNewPixel(true);
 		this.rightPixel = this.createNewPixel(false);
 		this.sound.play('reset');
+			this.calcScore();
 	}
 
 	update(time, delta) {
 		this.pixels.forEach(pixel => {
-			pixel.update();
-			pixel.updateBody();
+			if (!pixel.alive) {
+				this.pixels.splice(this.pixels.indexOf(pixel), 1);
+				this.calcScore();
+			}
+			else {
+				pixel.update();
+				pixel.updateBody();
+			}
 		});
 		if (this.leftPixel != null) {
 			this.leftPixel.update();

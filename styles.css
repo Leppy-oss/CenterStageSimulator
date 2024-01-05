@@ -65,6 +65,16 @@ body {
     display: inline-block;
 }
 
+/*
+.soft-highlight {
+    background-color: rgba(146, 148, 248, 0.4);
+}
+*/
+
+.dark-text {
+    color: rgba(215, 0, 0);
+}
+
 .info-panel-content {
     display: flex;
     flex-direction: column;
@@ -97,7 +107,6 @@ body {
 }
 
 .side-panel-children {
-    background-color: rgba(0, 0, 0, 0);
     padding-left: 3%;
     padding-right: 1%;
     border-width: 0px;
@@ -106,7 +115,6 @@ body {
 }
 
 .side-panel-list {
-    background-color: rgba(0, 0, 0, 0);
     border-width: 0px;
     padding-right: 1%;
     line-height: normal;
