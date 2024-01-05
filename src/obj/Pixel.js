@@ -86,7 +86,7 @@ Pixel.prototype.lockTo = function (x, y) {
 }
 
 Pixel.prototype.setPixelId = function (id) {
-	this.idText.setText(id.toString()).setVisible(true);
+	// this.idText.setText(id.toString()).setVisible(true);
 }
 
 Pixel.prototype.drop = function () {
