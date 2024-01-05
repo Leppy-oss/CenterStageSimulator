@@ -4,7 +4,7 @@ import Pixel from "./obj/Pixel";
 const maxWidth = 13,
 	maxHeight = 12;
 var board = createEmptyBoardMatrix();
-var visited = createEmptyBoardMatrix();
+var visitedMatrix = createEmptyBoardMatrix();
 /**
  * @type {Array<Array<Number>>}
  */
@@ -13,17 +13,74 @@ var adjacencyList = [];
  * @type {Array<Pixel>}
  */
 var pixels = [];
+var visitedBfs = new Set();
 
 /**
  * @param {Array<Pixel>} pixelList List with all of the pixels; no specific format required
- * @returns {Number} The current score of all the pixels on the specified backdrop
+ * @returns {Object} Score breakdown for the given pixels on the backdrop; pixels still in motion are ignored
  */
 export function checkScore(pixelList) {
 	pixels = pixelList;
+	/*
+	for (const pixel of pixelList) {
+		if (Math.sqrt(Math.pow(pixel.body.velocity.x, 2) + Math.pow(pixel.body.velocity.y, 2)) < 0.5) pixels.push(pixel);
+	}
+	*/
 	adjacencyList = constructEmptyAdjacencyList();
 	constructAdjacencyList();
-	let score = 0;
-	return score;
+	visitedBfs = new Set();
+	var numMosaics = 0;
+	for (let i = 0; i < pixels.length; i++) numMosaics * bfs(i);
+	return {
+		npixels: pixels.length,
+		nmosaics: numMosaics,
+		nlines: checkLines()
+	};
+}
+
+/**
+ * @returns {Number} The number of lines the pixels have reached
+ */
+function checkLines() {
+	for (let i = 0; i < maxHeight; i++) {
+		for (const j of board[i]) {
+			if (j > -1) return Math.min(Math.floor((maxHeight - i) / 3), 3);
+		}
+	}
+
+	return 0;
+}
+
+/**
+ * @returns {Number} Number of mosaics detected using BFS on the non-white pixel adjaacency list
+ */
+function bfs(start) {
+	const queue = [start];
+	let mosaics = 0;
+	while (queue.length) {
+		const node = queue.shift();
+		if (!visitedBfs.has(node)) {
+			visitedBfs.add(node);
+			if (adjacencyList[node].length == 2) {
+				// checks to make sure the right color configuration is present for a mosaic
+				const node1 = adjacencyList[node][0];
+				const node2 = adjacencyList[node][1];
+				if ((pixels[node1].color == pixels[node].color
+					&& pixels[node2].color == pixels[node].color) || 
+					(pixels[node1].color != pixels[node].color
+						&& pixels[node2].color != pixels[node].color && pixels[node2].color != pixels[node1].color)) {
+							if (adjacencyList[node1].length == 2 && adjacencyList[node2].length == 2) mosaics++;
+						}
+			}
+			for (const neighbor of adjacencyList[node]) visitedBfs.add(neighbor);
+
+			for (const neighbor of adjacencyList[node]) {
+				queue.push(neighbor);
+			}
+		}
+	}
+
+	return mosaics;
 }
 
 /**
@@ -31,11 +88,10 @@ export function checkScore(pixelList) {
  */
 function constructAdjacencyList() {
 	board = constructBoardRepresentation();
-	visited = createEmptyBoardMatrix();
+	visitedMatrix = createEmptyBoardMatrix();
 	for (let i = 0; i < maxHeight; i++) {
 		for (let j = 0; j < maxWidth; j++) floodFill(i, j, i, j);
 	}
-	console.log(adjacencyList);
 }
 
 /**
@@ -54,8 +110,8 @@ function floodFill(i, j, fromI, fromJ) {
 		adjacencyList[board[fromI][fromJ]].push(board[i][j]);
 		adjacencyList[board[i][j]].push(board[fromI][fromJ]);
 	}
-	if (visited[i][j] > -1) return;
-	visited[i][j] = 1;
+	if (visitedMatrix[i][j] > -1) return;
+	visitedMatrix[i][j] = 1;
 	floodFill(i - 1, j - 1, i, j);
 	floodFill(i - 1, j + 1, i, j);
 	floodFill(i + 1, j - 1, i, j);
@@ -70,7 +126,8 @@ function floodFill(i, j, fromI, fromJ) {
  */
 function empty(i, j) {
 	if (i < 0 || j < 0 || i > maxHeight - 1 || j > maxWidth - 1) return true;
-	return !(board[i][j] > -1);
+	if (board[i][j] < 0) return true;
+	return pixels[board[i][j]].color == 'white';
 }
 
 /**
@@ -95,7 +152,6 @@ function constructBoardRepresentation() {
 		const index = calculateIndex(pixels[i]);
 		matrix[index.y][index.x] = parseInt(i);
 	}
-	console.log(matrix);
 	return matrix;
 }
 

@@ -48,6 +48,7 @@ export default function Pixel(x, y, color, game) {
 }
 
 Pixel.prototype.updateColor = function(newColor) {
+	this.color = newColor;
 	this.pixel.setTexture(newColor.concat('-pixel'));
 	this.particles.setTexture(newColor);
 }

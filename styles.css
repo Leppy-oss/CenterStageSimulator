@@ -35,7 +35,7 @@ body {
     justify-content: space-between;
 }
 
-#side-stuff {
+.side-stuff {
     position: relative;
     display: flex;
     flex-flow: column wrap;

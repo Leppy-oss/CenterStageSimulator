@@ -18,7 +18,7 @@
     <meta name='og:type' content='website'>
     <meta name='og:url' content='https://center-stage-simulator.vercel.app/'>
     <!-- CDNjs imports -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+    <script async src='https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID'></script>
     <script>
         window.dataLayer = window.dataLayer || [];
 
@@ -33,16 +33,27 @@
 
 <body>
     <main>
-        <h2 id='version-number'>v0.2.4</h2>
+        <h2 id='version-number'>v0.3.0</h2>
         <div id='everything'>
             <div id='banner'>
                 <h1 id='welcome-text'>Welcome to the Centerstage Pixel Dropping Simulator!</h1>
             </div>
             <h1 id='plug'>The world's premiere centerstage pixel dropping simulator</h1>
-            <script type="module" src="src/main.js"></script>
+            <script type='module' src='src/main.js'></script>
             <div id='sideways-align'>
-                <div id="app"></div>
-                <div id='side-stuff'>
+                <div id='app'></div>
+                <div id='score-breakdown' class='side-stuff'>
+                    <div class='info-panel-content'>
+                        <h1 class='info-panel-title'>Score Breakdown</h1>
+                        <div class='info-panel' class='common-style'>
+                            <p class='side-panel-children'><span class='side-panel-highlight'># Pixels: </span><span id='num-pixels-text'>0</span></p>
+                            <p class='side-panel-children'><span class='side-panel-highlight'># Mosaics: </span><span id='num-mosaics-text'>0</span></p>
+                            <p class='side-panel-children'><span class='side-panel-highlight'># Lines: </span><span id='num-lines-text'>0</span></p>
+                            <p class='side-panel-children'><span class='side-panel-highlight'>Total Score: </span><span id='total-score-text'>0</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class='side-stuff'>
                     <div class='info-panel-content'>
                         <h1 class='info-panel-title'>Controls</h1>
                         <div class='info-panel' class='common-style'>
@@ -55,13 +66,13 @@
                         </div>
                     </div>
                 </div>
-                <div id='side-stuff'>
+                <div class='side-stuff'>
                     <div class='info-panel-content'>
                         <h1 class='info-panel-title'>Constraints</h1>
                         <div class='info-panel' class='common-style'>
                             <ul class='side-panel-list'>
                                 <li>Both pixels must be dropped before a new cycle can take place.</li>
-                                <li>The left and right pixels have a limited "closeness" due to real-world constraints of the claw thickness.</li>
+                                <li>The left and right pixels have a limited 'closeness' due to real-world constraints of the claw thickness.</li>
                                 <li>To simulate real-world cycles, pixel colors cannot be changed after dropping the first pixel. Decide what pixels to place before dropping them!</li>
                             </ul>
                         </div>

@@ -28,7 +28,7 @@ import { generate } from 'random-words'
 import Pixel from './obj/Pixel';
 import Boundary from './obj/boundary';
 import { TextButton } from './obj/TextButton';
-import { checkScore as calcScore } from './score-checker';
+import { checkScore } from './score-checker';
 
 export default class HomeScreen extends Phaser.Scene {
 	FIELD_DIMENSION = GameDimensions[0] / 2;
@@ -209,7 +209,12 @@ export default class HomeScreen extends Phaser.Scene {
 		document.addEventListener("contextmenu", function(e) {
 			e.preventDefault();
 		}, false);
-		this.matter.world.on('collisionstart', (event, bodyA, bodyB) => {
+		this.matter.world.on('collisionend', (event, bodyA, bodyB) => {
+			const scoreBreakdown = checkScore(this.pixels);
+			document.getElementById('num-pixels-text').innerHTML = scoreBreakdown.npixels.toString();
+			document.getElementById('num-mosaics-text').innerHTML = scoreBreakdown.nmosaics.toString();
+			document.getElementById('num-lines-text').innerHTML = scoreBreakdown.nlines.toString();
+			document.getElementById('total-score-text').innerHTML = (3 * scoreBreakdown.npixels + 10 * (scoreBreakdown.nmosaics + scoreBreakdown.nlines)).toString();
 			if (this.hitSoundEnabled) this.sound.play('hitv3');
 		});
 		this.sound.play('welcome');
@@ -319,7 +324,6 @@ export default class HomeScreen extends Phaser.Scene {
 				this.rightPixel.updateColor(this.colors[this.currColorRight]);
 			}
 		}
-		if (this.input.keyboard.checkDown(this.calcKey, 1000)) console.log(calcScore(this.pixels));
 	}
 }
 
