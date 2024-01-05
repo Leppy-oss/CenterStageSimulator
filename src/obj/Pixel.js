@@ -41,6 +41,10 @@ export default function Pixel(x, y, color, game) {
 	this.pixel.setExistingBody(this.body);
 	this.pixel.setOrigin(0.5, 0.5);
 	this.updateBody();
+	this.idText = game.add.text(this.x, this.y, '').setVisible(false).setStyle({
+		font: '800 20px Lato',
+		color: '#0f0',
+	});
 }
 
 Pixel.prototype.updateColor = function(newColor) {
@@ -53,18 +57,24 @@ Pixel.prototype.updateBody = function() {}
 Pixel.prototype.destroy = function() {
 	this.game.matter.world.remove(this.body);
 	this.pixel.destroy(true);
-	this.particles.destroy();
+	this.particles.destroy(true);
+	this.idText.destroy(true);
 }
 
 Pixel.prototype.update = function() {
 	this.updateBody();
 	this.pixel.update();
+	this.idText.setPosition(this.body.position.x - this.idText.width / 2, this.body.position.y - this.idText.height / 2);
 	// if (Math.sqrt(Math.pow(this.body.velocity.x, 2) + Math.pow(this.body.force.y, 2)) < 0.5) this.particles.setVisible(false);
 	// else this.particles.setVisible(true);
 }
 
 Pixel.prototype.lockTo = function (x, y) {
 	this.pixel.setPosition(x, y);
+}
+
+Pixel.prototype.setPixelId = function(id) {
+	this.idText.setText(id.toString()).setVisible(true);
 }
 
 Pixel.prototype.drop = function() {

@@ -52,13 +52,17 @@ function floodFill(i, j, fromI, fromJ) {
 	if (empty(i, j)) return;
 	if (visited[i][j] > -1) return;
 	visited[i][j] = 1;
-	if ((fromI != i || fromJ != j) && board[fromI][fromJ]) adjacencyList.at(board[fromI][fromJ]).push(board[i][j]);
+	if ((fromI != i || fromJ != j) && board[fromI][fromJ] > -1) {
+		console.log(i, j, fromI, fromJ);
+		adjacencyList[board[fromI][fromJ]].push(board[i][j]);
+		adjacencyList[board[i][j]].push(board[fromI][fromJ]);
+	}
 	floodFill(i - 1, j - 1, i, j);
 	floodFill(i - 1, j + 1, i, j);
 	floodFill(i + 1, j - 1, i, j);
 	floodFill(i + 1, j + 1, i, j);
-	floodFill(i, j - 1, i, j);
-	floodFill(i, j + 1, i, j);
+	floodFill(i, j - 2, i, j);
+	floodFill(i, j + 2, i, j);
 	return;
 }
 
@@ -67,7 +71,8 @@ function floodFill(i, j, fromI, fromJ) {
  */
 function empty(i, j) {
 	if (i < 0 || j < 0 || i > maxHeight - 1 || j > maxWidth - 1) return true;
-	return (board[i][j] != -1 && pixels[board[i][j]].color != 'white');
+	console.log(board[i][j])
+	return (board[i][j] > -1 && pixels[board[i][j]].color != 'white');
 }
 
 /**

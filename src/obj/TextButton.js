@@ -2,7 +2,7 @@ export class TextButton extends Phaser.GameObjects.Text {
 	constructor(game, x, y, text, style, clickCallback, hoverCallback, exitHoverCallback = function() {}) {
 		super(game, x, y, text, style);
 		this.setStyle({
-			FontFace: 'Lato'
+			font: '18px Lato'
 		})
 		this.game = game;
 

@@ -33,9 +33,18 @@ import { checkScore as calcScore } from './score-checker';
 export default class HomeScreen extends Phaser.Scene {
 	FIELD_DIMENSION = GameDimensions[0] / 2;
 
+	/**
+	 * @type {Array<Pixel>}
+	 */
 	pixels = [];
 	colors = ['white', 'purple', 'green', 'yellow'];
+	/**
+	 * @type {Pixel}
+	 */
 	leftPixel;
+	/**
+	 * @type {Pixel}
+	 */
 	rightPixel;
 	currColorLeft = 0;
 	currColorRight = 0;
@@ -170,6 +179,7 @@ export default class HomeScreen extends Phaser.Scene {
 			if (!this.hoveringButton) {
 				if (e.button == 0 && this.leftPixel != null) {
 					this.leftPixel.drop();
+					this.leftPixel.setPixelId(this.pixels.length);
 					this.pixels.push(this.leftPixel);
 					this.leftPixelOffset = {
 						x: -125,
@@ -178,6 +188,7 @@ export default class HomeScreen extends Phaser.Scene {
 					this.leftPixel = null;
 				} else if (e.button == 2 && this.rightPixel != null) {
 					this.rightPixel.drop();
+					this.rightPixel.setPixelId(this.pixels.length);
 					this.pixels.push(this.rightPixel);
 					this.rightPixelOffset = {
 						x: 125,
@@ -205,22 +216,26 @@ export default class HomeScreen extends Phaser.Scene {
 		this.leftPixel = this.createNewPixel(true);
 		this.rightPixel = this.createNewPixel(false);
 
-		this.hitSoundBtn = new TextButton(this, GameDimensions[0] - 200, 25, 'Disable Bounce Sound', { fill: '#0f0' }, () => {
+		const minTextY = 15;
+		const textYGap = 25;
+
+		this.hitSoundBtn = new TextButton(this, GameDimensions[0] - 200, minTextY, 'Disable Bounce Sound', { fill: '#0f0' }, () => {
 			this.hitSoundEnabled = !this.hitSoundEnabled;
 			this.changeHitSoundBtnText();
 		}, () => this.hoveringButton = true, () => this.hoveringButton = false);
 		this.add.existing(this.hitSoundBtn);
-		this.add.existing(new TextButton(this, 25, 25, 'Reset', { fill: '#0f0' }, () => this.reset(), () => this.hoveringButton = true, () => this.hoveringButton = false));
 
-		this.add.existing(new TextButton(this, 325, 50, 'White', { fill: '#0f0' }, () => this.changeRightColor(0), () => this.hoveringButton = true, () => this.hoveringButton = false));
-		this.add.existing(new TextButton(this, 325, 75, 'Purple', { fill: '#0f0' }, () => this.changeRightColor(1), () => this.hoveringButton = true, () => this.hoveringButton = false));
-		this.add.existing(new TextButton(this, 325, 100, 'Green', { fill: '#0f0' }, () => this.changeRightColor(2), () => this.hoveringButton = true, () => this.hoveringButton = false));
-		this.add.existing(new TextButton(this, 325, 125, 'Yellow', { fill: '#0f0' }, () => this.changeRightColor(3), () => this.hoveringButton = true, () => this.hoveringButton = false));
+		this.add.existing(new TextButton(this, 25, minTextY, 'Reset', { fill: '#0f0' }, () => this.reset(), () => this.hoveringButton = true, () => this.hoveringButton = false));
 
-		this.add.existing(new TextButton(this, 25, 50, 'White', { fill: '#0f0' }, () => this.changeLeftColor(0), () => this.hoveringButton = true, () => this.hoveringButton = false));
-		this.add.existing(new TextButton(this, 25, 75, 'Purple', { fill: '#0f0' }, () => this.changeLeftColor(1), () => this.hoveringButton = true, () => this.hoveringButton = false));
-		this.add.existing(new TextButton(this, 25, 100, 'Green', { fill: '#0f0' }, () => this.changeLeftColor(2), () => this.hoveringButton = true, () => this.hoveringButton = false));
-		this.add.existing(new TextButton(this, 25, 125, 'Yellow', { fill: '#0f0' }, () => this.changeLeftColor(3), () => this.hoveringButton = true, () => this.hoveringButton = false));
+		this.add.existing(new TextButton(this, 325, minTextY + textYGap, 'White', { fill: '#0f0' }, () => this.changeRightColor(0), () => this.hoveringButton = true, () => this.hoveringButton = false));
+		this.add.existing(new TextButton(this, 325, minTextY + 2 * textYGap, 'Purple', { fill: '#0f0' }, () => this.changeRightColor(1), () => this.hoveringButton = true, () => this.hoveringButton = false));
+		this.add.existing(new TextButton(this, 325, minTextY + 3 * textYGap, 'Green', { fill: '#0f0' }, () => this.changeRightColor(2), () => this.hoveringButton = true, () => this.hoveringButton = false));
+		this.add.existing(new TextButton(this, 325, minTextY + 4 * textYGap, 'Yellow', { fill: '#0f0' }, () => this.changeRightColor(3), () => this.hoveringButton = true, () => this.hoveringButton = false));
+
+		this.add.existing(new TextButton(this, 25, minTextY + textYGap, 'White', { fill: '#0f0' }, () => this.changeLeftColor(0), () => this.hoveringButton = true, () => this.hoveringButton = false));
+		this.add.existing(new TextButton(this, 25, minTextY + 2 * textYGap, 'Purple', { fill: '#0f0' }, () => this.changeLeftColor(1), () => this.hoveringButton = true, () => this.hoveringButton = false));
+		this.add.existing(new TextButton(this, 25, minTextY + 3 * textYGap, 'Green', { fill: '#0f0' }, () => this.changeLeftColor(2), () => this.hoveringButton = true, () => this.hoveringButton = false));
+		this.add.existing(new TextButton(this, 25, minTextY + 4 * textYGap, 'Yellow', { fill: '#0f0' }, () => this.changeLeftColor(3), () => this.hoveringButton = true, () => this.hoveringButton = false));
 	}
 
 	changeHitSoundBtnText() {
@@ -261,15 +276,15 @@ export default class HomeScreen extends Phaser.Scene {
 
 	update(time, delta) {
 		this.pixels.forEach(pixel => {
-			pixel.update(time, delta);
-			pixel.updateBody(time, delta);
+			pixel.update();
+			pixel.updateBody();
 		});
 		if (this.leftPixel != null) {
-			this.leftPixel.update(time, delta);
+			this.leftPixel.update();
 			this.leftPixel.lockTo(this.mouseX + this.leftPixelOffset.x, this.mouseY + this.leftPixelOffset.y);
 		}
 		if (this.rightPixel != null) {
-			this.rightPixel.update(time, delta);
+			this.rightPixel.update();
 			this.rightPixel.lockTo(this.mouseX + this.rightPixelOffset.x, this.mouseY + this.rightPixelOffset.y);
 		}
 
