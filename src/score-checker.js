@@ -50,13 +50,12 @@ function constructEmptyAdjacencyList() {
 
 function floodFill(i, j, fromI, fromJ) {
 	if (empty(i, j)) return;
-	if (visited[i][j] > -1) return;
-	visited[i][j] = 1;
-	if ((fromI != i || fromJ != j) && board[fromI][fromJ] > -1) {
-		console.log(i, j, fromI, fromJ);
+	if (board[fromI][fromJ] > -1 && board[i][j] > -1 && (fromI != i || fromJ != j) && adjacencyList[board[fromI][fromJ]].find((value) => value == board[i][j]) === undefined) {
 		adjacencyList[board[fromI][fromJ]].push(board[i][j]);
 		adjacencyList[board[i][j]].push(board[fromI][fromJ]);
 	}
+	if (visited[i][j] > -1) return;
+	visited[i][j] = 1;
 	floodFill(i - 1, j - 1, i, j);
 	floodFill(i - 1, j + 1, i, j);
 	floodFill(i + 1, j - 1, i, j);
@@ -71,8 +70,7 @@ function floodFill(i, j, fromI, fromJ) {
  */
 function empty(i, j) {
 	if (i < 0 || j < 0 || i > maxHeight - 1 || j > maxWidth - 1) return true;
-	console.log(board[i][j])
-	return (board[i][j] > -1 && pixels[board[i][j]].color != 'white');
+	return !(board[i][j] > -1);
 }
 
 /**
