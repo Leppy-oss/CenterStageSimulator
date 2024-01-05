@@ -28,6 +28,7 @@ import { generate } from 'random-words'
 import Pixel from './obj/Pixel';
 import Boundary from './obj/boundary';
 import { TextButton } from './obj/TextButton';
+import { checkScore as calcScore } from './score-checker';
 
 export default class HomeScreen extends Phaser.Scene {
 	FIELD_DIMENSION = GameDimensions[0] / 2;
@@ -116,11 +117,8 @@ export default class HomeScreen extends Phaser.Scene {
 
 		this.load.image('logo', '/8565CL.png');
 		this.load.image('backdrop', '/backdrop.png');
-		this.load.image('white-pixel', './white-pixel.png');
-		this.load.image('purple-pixel', './purple-pixel.png');
-		this.load.image('green-pixel', './green-pixel.png');
-		this.load.image('yellow-pixel', './yellow-pixel.png');
-		for (const color of this.colors) this.load.image(color, '/particles/'.concat(color).concat('.png'));
+		for (const color of this.colors) this.load.image(color, './particles/'.concat(color).concat('.png'));
+		for (const color of this.colors) this.load.image(color.concat('-pixel'), './'.concat(color).concat('-pixel.png'));
 		this.load.audio('hit', './audio/hit.mp3');
 		this.load.audio('wow', './audio/wow.wav');
 		this.load.audio('bomb', './audio/bomb.mp3');
@@ -148,6 +146,7 @@ export default class HomeScreen extends Phaser.Scene {
 		this.resetKey = this.input.keyboard.addKey(82); // r
 		this.hitKey = this.input.keyboard.addKey(32); // space
 		this.cycleKeyLeft = this.input.keyboard.addKey(37); // left arrow
+		this.calcKey = this.input.keyboard.addKey(38); // up arrow
 		this.cycleKeyRight = this.input.keyboard.addKey(39); // left arrow
 
 		this.leftKeyLeft = this.input.keyboard.addKey(65); // a
@@ -305,6 +304,7 @@ export default class HomeScreen extends Phaser.Scene {
 				this.rightPixel.updateColor(this.colors[this.currColorRight]);
 			}
 		}
+		if (this.input.keyboard.checkDown(this.calcKey, 1000)) console.log(calcScore(this.pixels));
 	}
 }
 
