@@ -30,7 +30,7 @@ export function checkScore(pixelList) {
 	constructAdjacencyList();
 	visitedBfs = new Set();
 	var numMosaics = 0;
-	for (let i = 0; i < pixels.length; i++) numMosaics * bfs(i);
+	for (let i = 0; i < pixels.length; i++) numMosaics += bfs(i);
 	return {
 		npixels: pixels.length,
 		nmosaics: numMosaics,
