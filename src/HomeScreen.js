@@ -30,6 +30,7 @@ import Boundary from './obj/boundary';
 import { TextButton } from './obj/TextButton';
 import { checkScore } from './score-checker';
 import { numberToColorHsl } from './utils';
+import MagicWand from './obj/MagicWand';
 
 export default class HomeScreen extends Phaser.Scene {
 	FIELD_DIMENSION = GameDimensions[0] / 2;
@@ -64,6 +65,11 @@ export default class HomeScreen extends Phaser.Scene {
 	};
 	modSpeed = 0.15;
 	hitSoundBtn;
+	magicWandBtn;
+	/**
+	 * @type {MagicWand}
+	 */
+	magicWand;
 
 	constructor() {
 		super('test');
@@ -129,6 +135,8 @@ export default class HomeScreen extends Phaser.Scene {
 		this.load.image('backdrop', '/backdrop.png');
 		for (const color of this.colors) this.load.image(color, './particles/'.concat(color).concat('.png'));
 		for (const color of this.colors) this.load.image(color.concat('-pixel'), './'.concat(color).concat('-pixel.png'));
+		this.load.image('magic-wand', './magic-wand.png');
+
 		this.load.audio('hit', './audio/hit.mp3');
 		this.load.audio('wow', './audio/wow.wav');
 		this.load.audio('bomb', './audio/bomb.mp3');
@@ -138,6 +146,8 @@ export default class HomeScreen extends Phaser.Scene {
 		this.load.audio('change-color-failed', './audio/change-color-failed.wav');
 		this.load.audio('reset', './audio/reset.wav');
 		this.load.audio('toggle', './audio/toggle.wav');
+
+		// feke-gen
 		for (let i = 0; i < 30; i++) this.load.image(generate(1)[0], '/8565CL.png');
 	}
 
@@ -156,7 +166,6 @@ export default class HomeScreen extends Phaser.Scene {
 		this.resetKey = this.input.keyboard.addKey(82); // r
 		this.hitKey = this.input.keyboard.addKey(32); // space
 		this.cycleKeyLeft = this.input.keyboard.addKey(37); // left arrow
-		this.calcKey = this.input.keyboard.addKey(38); // up arrow
 		this.cycleKeyRight = this.input.keyboard.addKey(39); // left arrow
 
 		this.leftKeyLeft = this.input.keyboard.addKey(65); // a
@@ -168,6 +177,8 @@ export default class HomeScreen extends Phaser.Scene {
 		this.rightKeyRight = this.input.keyboard.addKey(76); // l
 		this.upKeyRight = this.input.keyboard.addKey(73); //i
 		this.downKeyRight = this.input.keyboard.addKey(75); // k
+		
+		this.wandKey = this.input.keyboard.addKey(38); // up arrow
 
 		this.add.image(GameDimensions[0] / 2, GameDimensions[1] / 2, 'backdrop').setDisplaySize(GameDimensions[0], GameDimensions[1]);
 		this.add.image(GameDimensions[0] - 25, GameDimensions[1] / 2, 'logo').setScale(0.25, 0.25).setRotation(-Math.PI / 2);
@@ -217,11 +228,12 @@ export default class HomeScreen extends Phaser.Scene {
 		this.sound.play('welcome');
 		this.leftPixel = this.createNewPixel(true);
 		this.rightPixel = this.createNewPixel(false);
+		this.magicWand = new MagicWand(this.mouseX, this.mouseY, this);
 
 		const minTextY = 15;
-		const textYGap = 25;
+		const textYGap = 20;
 
-		this.hitSoundBtn = new TextButton(this, GameDimensions[0] - 200, minTextY, 'Disable Bounce Sound', { fill: '#0f0' }, () => {
+		this.hitSoundBtn = new TextButton(this, 225, minTextY, 'Disable Bounce Sound', { fill: '#0f0' }, () => {
 			this.hitSoundEnabled = !this.hitSoundEnabled;
 			this.changeHitSoundBtnText();
 		}, () => this.hoveringButton = true, () => this.hoveringButton = false);
@@ -238,6 +250,9 @@ export default class HomeScreen extends Phaser.Scene {
 		this.add.existing(new TextButton(this, 25, minTextY + 2 * textYGap, 'Purple', { fill: '#0f0' }, () => this.changeLeftColor(1), () => this.hoveringButton = true, () => this.hoveringButton = false));
 		this.add.existing(new TextButton(this, 25, minTextY + 3 * textYGap, 'Green', { fill: '#0f0' }, () => this.changeLeftColor(2), () => this.hoveringButton = true, () => this.hoveringButton = false));
 		this.add.existing(new TextButton(this, 25, minTextY + 4 * textYGap, 'Yellow', { fill: '#0f0' }, () => this.changeLeftColor(3), () => this.hoveringButton = true, () => this.hoveringButton = false));
+
+		this.magicWandBtn = new TextButton(this, 25, minTextY + 5 * textYGap, 'Enable Magic Wand', { fill: '#0f0' }, () => this.toggleMagicWandBtn(), () => this.hoveringButton = true, () => this.hoveringButton = false);
+		this.add.existing(this.magicWandBtn);
 	}
 
 	calcScore() {
@@ -255,6 +270,13 @@ export default class HomeScreen extends Phaser.Scene {
 	changeHitSoundBtnText() {
 		if (this.hitSoundEnabled) this.hitSoundBtn.text = 'Disable Bounce Sound';
 		else this.hitSoundBtn.text = 'Enable Bounce Sound';
+		this.sound.play('toggle');
+	}
+
+	toggleMagicWandBtn() {
+		this.magicWand.toggle();
+		if (this.magicWand.magicWand.visible) this.magicWandBtn.text = 'Disable Magic Wand';
+		else this.magicWandBtn.text = 'Enable Magic Wand';
 		this.sound.play('toggle');
 	}
 
@@ -285,7 +307,7 @@ export default class HomeScreen extends Phaser.Scene {
 		this.leftPixel = this.createNewPixel(true);
 		this.rightPixel = this.createNewPixel(false);
 		this.sound.play('reset');
-			this.calcScore();
+		this.calcScore();
 	}
 
 	update(time, delta) {
@@ -306,6 +328,7 @@ export default class HomeScreen extends Phaser.Scene {
 		if (this.rightPixel != null) {
 			this.rightPixel.update();
 			this.rightPixel.lockTo(this.mouseX + this.rightPixelOffset.x, this.mouseY + this.rightPixelOffset.y);
+			this.magicWand.lockTo(this.mouseX, this.mouseY);
 		}
 
 		if (this.input.keyboard.checkDown(this.resetKey, 1000)) this.reset();
@@ -339,6 +362,7 @@ export default class HomeScreen extends Phaser.Scene {
 				this.rightPixel.updateColor(this.colors[this.currColorRight]);
 			}
 		}
+		if (this.input.keyboard.checkDown(this.wandKey, 1000)) this.magicWand.toggle();
 	}
 }
 
@@ -349,10 +373,3 @@ export const PROGRESS_BAR_HEIGHT = 50;
 /** loading progress bar padding in px */
 export const PROGRESS_BAR_PADDING = 10;
 export const GameDimensions = [400, 602];
-/** diameter in inches of the cone */
-export const CONE_DIAM = 4;
-export const CATEGORY_ROBOT_1 = 0;
-export const CATEGORY_ROBOT_2 = 1;
-export const CATEGORY_ROBOT_3 = 2;
-export const CATEGORY_ROBOT_4 = 3;
-export const CATEGORY_ENV = 44;

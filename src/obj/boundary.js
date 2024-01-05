@@ -1,4 +1,3 @@
-import { CONE_DIAM } from "../HomeScreen";
 import { inchesToGamePixels } from "../utils";
 import { GameDimensions } from "../HomeScreen";
 
