@@ -28,7 +28,7 @@ import { generate } from 'random-words'
 import Pixel from './obj/Pixel';
 import Boundary from './obj/boundary';
 import { TextButton } from './obj/TextButton';
-import { checkScore } from './score-checker';
+import ScoreChecker from './score-checker';
 import { numberToColorHsl } from './utils';
 import MagicWand from './obj/MagicWand';
 
@@ -70,6 +70,10 @@ export default class HomeScreen extends Phaser.Scene {
 	 * @type {MagicWand}
 	 */
 	magicWand;
+	/**
+	 * @type {ScoreChecker}
+	 */
+	scoreChecker;
 
 	constructor() {
 		super('test');
@@ -113,16 +117,16 @@ export default class HomeScreen extends Phaser.Scene {
 		});
 		assetText.setOrigin(0.5, 0.5);
 
-		this.load.on('progress', function (value) {
+		this.load.on('progress', function(value) {
 			percentText.setText(Math.round(value * 100) + '%');
 			progressBar.clear();
 			progressBar.fillStyle(0xffffff, 1);
 			progressBar.fillRect((GameDimensions[0] - PROGRESS_BAR_WIDTH + PROGRESS_BAR_PADDING) / 2, (GameDimensions[1] - PROGRESS_BAR_HEIGHT + PROGRESS_BAR_PADDING) / 2, (PROGRESS_BAR_WIDTH - 2 * PROGRESS_BAR_HEIGHT) * value, PROGRESS_BAR_HEIGHT - PROGRESS_BAR_PADDING);
 		});
-		this.load.on('fileprogress', function (file) {
+		this.load.on('fileprogress', function(file) {
 			assetText.setText('Loading asset: ' + file.key);
 		});
-		this.load.on('complete', function () {
+		this.load.on('complete', function() {
 			console.log('Finished loading assets');
 			progressBar.destroy();
 			progressBox.destroy();
@@ -177,7 +181,7 @@ export default class HomeScreen extends Phaser.Scene {
 		this.rightKeyRight = this.input.keyboard.addKey(76); // l
 		this.upKeyRight = this.input.keyboard.addKey(73); //i
 		this.downKeyRight = this.input.keyboard.addKey(75); // k
-		
+
 		this.wandKey = this.input.keyboard.addKey(38); // up arrow
 
 		this.add.image(GameDimensions[0] / 2, GameDimensions[1] / 2, 'backdrop').setDisplaySize(GameDimensions[0], GameDimensions[1]);
@@ -218,7 +222,7 @@ export default class HomeScreen extends Phaser.Scene {
 				}
 			}
 		});
-		document.addEventListener("contextmenu", function (e) {
+		document.addEventListener("contextmenu", function(e) {
 			e.preventDefault();
 		}, false);
 		this.matter.world.on('collisionend', (event, bodyA, bodyB) => {
@@ -229,6 +233,7 @@ export default class HomeScreen extends Phaser.Scene {
 		this.leftPixel = this.createNewPixel(true);
 		this.rightPixel = this.createNewPixel(false);
 		this.magicWand = new MagicWand(this.mouseX, this.mouseY, this);
+		this.scoreChecker = new ScoreChecker(this);
 
 		const minTextY = 15;
 		const textYGap = 20;
@@ -256,7 +261,7 @@ export default class HomeScreen extends Phaser.Scene {
 	}
 
 	calcScore() {
-		const scoreBreakdown = checkScore(this.pixels);
+		const scoreBreakdown = this.scoreChecker.checkScore(this.pixels);
 		document.getElementById('num-pixels-text').innerHTML = scoreBreakdown.npixels.toString();
 		document.getElementById('num-pixels-text').style.color = numberToColorHsl(scoreBreakdown.npixels, 5, 10);
 		document.getElementById('num-mosaics-text').innerHTML = scoreBreakdown.nmosaics.toString();
@@ -315,8 +320,7 @@ export default class HomeScreen extends Phaser.Scene {
 			if (!pixel.alive) {
 				this.pixels.splice(this.pixels.indexOf(pixel), 1);
 				this.calcScore();
-			}
-			else {
+			} else {
 				pixel.update();
 				pixel.updateBody();
 			}

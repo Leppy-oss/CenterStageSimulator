@@ -3,47 +3,46 @@ import Pixel from "./obj/Pixel";
 
 const maxWidth = 13,
 	maxHeight = 12;
-var board = createEmptyBoardMatrix();
-var visitedMatrix = createEmptyBoardMatrix();
-/**
- * @type {Array<Array<Number>>}
- */
-var adjacencyList = [];
-/**
- * @type {Array<Pixel>}
- */
-var pixels = [];
-var visitedBfs = new Set();
+
+export default function ScoreChecker(game) {
+	this.game = game;
+	/**
+	 * @type {Array<Array<Number>}
+	 */
+	this.adjacencyList = [];
+	/**
+	 * @type {Array<Pixel>}
+	 */
+	this.pixels = [];
+	this.visitedBfs = new Set();
+	this.board = this.createEmptyBoardMatrix();
+	this.visitedMatrix = this.createEmptyBoardMatrix();
+}
 
 /**
  * @param {Array<Pixel>} pixelList List with all of the pixels; no specific format required
  * @returns {Object} Score breakdown for the given pixels on the backdrop; pixels still in motion are ignored
  */
-export function checkScore(pixelList) {
-	pixels = pixelList;
-	/*
-	for (const pixel of pixelList) {
-		if (Math.sqrt(Math.pow(pixel.body.velocity.x, 2) + Math.pow(pixel.body.velocity.y, 2)) < 0.5) pixels.push(pixel);
-	}
-	*/
-	adjacencyList = constructEmptyAdjacencyList();
-	constructAdjacencyList();
-	visitedBfs = new Set();
+ScoreChecker.prototype.checkScore = function(pixelList) {
+	this.pixels = pixelList;
+	this.adjacencyList = this.constructEmptyAdjacencyList();
+	this.constructAdjacencyList();
+	this.visitedBfs = new Set();
 	var numMosaics = 0;
-	for (let i = 0; i < pixels.length; i++) numMosaics += bfs(i);
+	for (let i = 0; i < this.pixels.length; i++) numMosaics += this.bfs(i);
 	return {
-		npixels: pixels.length,
+		npixels: this.pixels.length,
 		nmosaics: numMosaics,
-		nlines: checkLines()
+		nlines: this.checkLines()
 	};
 }
 
 /**
  * @returns {Number} The number of lines the pixels have reached
  */
-function checkLines() {
+ScoreChecker.prototype.checkLines = function() {
 	for (let i = 0; i < maxHeight; i++) {
-		for (const j of board[i]) {
+		for (const j of this.board[i]) {
 			if (j > -1) return Math.min(Math.floor((maxHeight - i) / 3), 3);
 		}
 	}
@@ -54,27 +53,27 @@ function checkLines() {
 /**
  * @returns {Number} Number of mosaics detected using BFS on the non-white pixel adjaacency list
  */
-function bfs(start) {
+ScoreChecker.prototype.bfs = function(start) {
 	const queue = [start];
 	let mosaics = 0;
 	while (queue.length) {
 		const node = queue.shift();
-		if (!visitedBfs.has(node)) {
-			visitedBfs.add(node);
-			if (adjacencyList[node].length == 2) {
+		if (!this.visitedBfs.has(node)) {
+			this.visitedBfs.add(node);
+			if (this.adjacencyList[node].length == 2) {
 				// checks to make sure the right color configuration is present for a mosaic
-				const node1 = adjacencyList[node][0];
-				const node2 = adjacencyList[node][1];
-				if ((pixels[node1].color == pixels[node].color
-					&& pixels[node2].color == pixels[node].color) || 
-					(pixels[node1].color != pixels[node].color
-						&& pixels[node2].color != pixels[node].color && pixels[node2].color != pixels[node1].color)) {
-							if (adjacencyList[node1].length == 2 && adjacencyList[node2].length == 2) mosaics++;
-						}
+				const node1 = this.adjacencyList[node][0];
+				const node2 = this.adjacencyList[node][1];
+				if ((this.pixels[node1].color == this.pixels[node].color &&
+						this.pixels[node2].color == this.pixels[node].color) ||
+					(this.pixels[node1].color != this.pixels[node].color &&
+						this.pixels[node2].color != this.pixels[node].color && this.pixels[node2].color != this.pixels[node1].color)) {
+					if (this.adjacencyList[node1].length == 2 && this.adjacencyList[node2].length == 2) mosaics++;
+				}
 			}
-			for (const neighbor of adjacencyList[node]) visitedBfs.add(neighbor);
+			for (const neighbor of this.adjacencyList[node]) this.visitedBfs.add(neighbor);
 
-			for (const neighbor of adjacencyList[node]) {
+			for (const neighbor of this.adjacencyList[node]) {
 				queue.push(neighbor);
 			}
 		}
@@ -86,11 +85,11 @@ function bfs(start) {
 /**
  * Creates an adjacency list representing connections between pixels
  */
-function constructAdjacencyList() {
-	board = constructBoardRepresentation();
-	visitedMatrix = createEmptyBoardMatrix();
+ScoreChecker.prototype.constructAdjacencyList = function() {
+	this.board = this.constructBoardRepresentation();
+	this.visitedMatrix = this.createEmptyBoardMatrix();
 	for (let i = 0; i < maxHeight; i++) {
-		for (let j = 0; j < maxWidth; j++) floodFill(i, j, i, j);
+		for (let j = 0; j < maxWidth; j++) this.floodFill(i, j, i, j);
 	}
 }
 
@@ -98,42 +97,55 @@ function constructAdjacencyList() {
  * Creates an empty adjacency list representing connections between pixels
  * @returns {Array<Array<Number>>} Adjacency list representing connections between pixels
  */
-function constructEmptyAdjacencyList() {
+ScoreChecker.prototype.constructEmptyAdjacencyList = function() {
 	const ret = [];
-	for (const i in pixels) ret.push([]);
+	for (const i in this.pixels) ret.push([]);
 	return ret;
 }
 
-function floodFill(i, j, fromI, fromJ) {
-	if (empty(i, j)) return;
-	if (board[fromI][fromJ] > -1 && board[i][j] > -1 && (fromI != i || fromJ != j) && adjacencyList[board[fromI][fromJ]].find((value) => value == board[i][j]) === undefined) {
-		adjacencyList[board[fromI][fromJ]].push(board[i][j]);
-		adjacencyList[board[i][j]].push(board[fromI][fromJ]);
+ScoreChecker.prototype.floodFill = function(i, j, fromI, fromJ) {
+	if (this.empty(i, j)) return;
+	if (this.board[fromI][fromJ] > -1 && this.board[i][j] > -1 && (fromI != i || fromJ != j) && this.adjacencyList[this.board[fromI][fromJ]].find((value) => value == this.board[i][j]) === undefined) {
+		this.adjacencyList[this.board[fromI][fromJ]].push(this.board[i][j]);
+		this.adjacencyList[this.board[i][j]].push(this.board[fromI][fromJ]);
 	}
-	if (visitedMatrix[i][j] > -1) return;
-	visitedMatrix[i][j] = 1;
-	floodFill(i - 1, j - 1, i, j);
-	floodFill(i - 1, j + 1, i, j);
-	floodFill(i + 1, j - 1, i, j);
-	floodFill(i + 1, j + 1, i, j);
-	floodFill(i, j - 2, i, j);
-	floodFill(i, j + 2, i, j);
+	if (this.visitedMatrix[i][j] > -1) return;
+	this.visitedMatrix[i][j] = 1;
+	this.floodFill(i - 1, j - 1, i, j);
+	this.floodFill(i - 1, j + 1, i, j);
+	this.floodFill(i + 1, j - 1, i, j);
+	this.floodFill(i + 1, j + 1, i, j);
+	this.floodFill(i, j - 2, i, j);
+	this.floodFill(i, j + 2, i, j);
 	return;
 }
 
 /**
- * Floodfill companion function to check if the slot on the backdrop is invalid for further filling
+ * Floodfill companion ScoreChecker.prototype.to check if the slot on the backdrop is invalid for further filling
  */
-function empty(i, j) {
+ScoreChecker.prototype.empty = function(i, j) {
 	if (i < 0 || j < 0 || i > maxHeight - 1 || j > maxWidth - 1) return true;
-	if (board[i][j] < 0) return true;
-	return pixels[board[i][j]].color == 'white';
+	if (this.board[i][j] < 0) return true;
+	return this.pixels[this.board[i][j]].color == 'white';
+}
+
+/**
+ * Creates a matrix representing which slots on the board are occupied by pixels
+ * @returns {Array<Array<Number>>} Matrix representing which slots on the board are occupied by pixels ([row][col] format)
+ */
+ScoreChecker.prototype.constructBoardRepresentation = function() {
+	const matrix = this.createEmptyBoardMatrix();
+	for (const i in this.pixels) {
+		const index = this.calculateIndex(this.pixels[i]);
+		matrix[index.y][index.x] = parseInt(i);
+	}
+	return matrix;
 }
 
 /**
  * @returns {Array<Array<Number>>}
  */
-function createEmptyBoardMatrix() {
+ScoreChecker.prototype.createEmptyBoardMatrix = function() {
 	const ret = [];
 	for (let i = 0; i < maxHeight; i++) {
 		ret.push([]);
@@ -143,24 +155,11 @@ function createEmptyBoardMatrix() {
 }
 
 /**
- * Creates a matrix representing which slots on the board are occupied by pixels
- * @returns {Array<Array<Number>>} Matrix representing which slots on the board are occupied by pixels ([row][col] format)
- */
-function constructBoardRepresentation() {
-	const matrix = createEmptyBoardMatrix();
-	for (const i in pixels) {
-		const index = calculateIndex(pixels[i]);
-		matrix[index.y][index.x] = parseInt(i);
-	}
-	return matrix;
-}
-
-/**
  * Calculates x/y coords of a pixel, relative to the backdrop's rows and columns
  * @param {Pixel} pixel Input pixel
  * @returns {Object} coords in x/y format of the pixel on the backdrop
  */
-function calculateIndex(pixel) {
+ScoreChecker.prototype.calculateIndex = function(pixel) {
 	return {
 		x: Math.floor(pixel.body.position.x / GameDimensions[0] * maxWidth),
 		y: Math.floor(pixel.body.position.y / GameDimensions[1] * maxHeight)
