@@ -4,6 +4,9 @@ import Pixel from "./obj/Pixel";
 const maxWidth = 13,
 	maxHeight = 12;
 
+/**
+ * @param {Phaser.Scene} game 
+ */
 export default function ScoreChecker(game) {
 	this.game = game;
 	/**
@@ -17,6 +20,11 @@ export default function ScoreChecker(game) {
 	this.visitedBfs = new Set();
 	this.board = this.createEmptyBoardMatrix();
 	this.visitedMatrix = this.createEmptyBoardMatrix();
+	/**
+	 * @type {Array<Phaser.GameObjects.Line>}
+	 */
+	this.lines = [];
+	this.createLine(50, 50, 100, 100, 0xff0000);
 }
 
 /**
@@ -164,4 +172,20 @@ ScoreChecker.prototype.calculateIndex = function(pixel) {
 		x: Math.floor(pixel.body.position.x / GameDimensions[0] * maxWidth),
 		y: Math.floor(pixel.body.position.y / GameDimensions[1] * maxHeight)
 	}
+}
+
+ScoreChecker.prototype.createLine = function(x1, y1, x2, y2, color) {
+	this.lines.push(this.game.add.line(x1, y1, x1, y1, x2, y2, color, 1).setStrokeStyle(5).setVisible(true));
+}
+
+ScoreChecker.prototype.update = function() {
+	this.lines.forEach((line) => {
+		line.update();
+	});
+}
+
+ScoreChecker.prototype.destroyLines = function() {
+	this.lines.forEach((line) => {
+		line.setVisible(false).destroy();
+	});
 }

@@ -193,7 +193,7 @@ export default class HomeScreen extends Phaser.Scene {
 		});
 		document.querySelector('canvas').addEventListener('mousedown', (e) => {
 			if (!this.hoveringButton) {
-				if (e.button == 0 && this.leftPixel != null) {
+				if (e.button == 0 && this.leftPixel != null && this.leftPixel.active) {
 					this.leftPixel.drop();
 					this.leftPixel.setPixelId(this.pixels.length);
 					this.pixels.push(this.leftPixel);
@@ -202,7 +202,7 @@ export default class HomeScreen extends Phaser.Scene {
 						y: 0
 					};
 					this.leftPixel = null;
-				} else if (e.button == 2 && this.rightPixel != null) {
+				} else if (e.button == 2 && this.rightPixel != null && this.rightPixel.active) {
 					this.rightPixel.drop();
 					this.rightPixel.setPixelId(this.pixels.length);
 					this.pixels.push(this.rightPixel);
@@ -280,8 +280,15 @@ export default class HomeScreen extends Phaser.Scene {
 
 	toggleMagicWandBtn() {
 		this.magicWand.toggle();
-		if (this.magicWand.magicWand.visible) this.magicWandBtn.text = 'Disable Magic Wand';
-		else this.magicWandBtn.text = 'Enable Magic Wand';
+		if (this.magicWand.magicWand.visible) {
+			this.magicWandBtn.text = 'Disable Magic Wand';
+			if (this.leftPixel != null) this.leftPixel.inactive();
+			if (this.rightPixel != null) this.rightPixel.inactive();
+		} else {
+			this.magicWandBtn.text = 'Enable Magic Wand';
+			if (this.leftPixel != null) this.leftPixel.activeOn();
+			if (this.rightPixel != null) this.rightPixel.activeOn();
+		}
 		this.sound.play('toggle');
 	}
 
@@ -325,6 +332,7 @@ export default class HomeScreen extends Phaser.Scene {
 				pixel.updateBody();
 			}
 		});
+		this.scoreChecker.update();
 		if (this.leftPixel != null) {
 			this.leftPixel.update();
 			this.leftPixel.lockTo(this.mouseX + this.leftPixelOffset.x, this.mouseY + this.leftPixelOffset.y);
@@ -332,8 +340,8 @@ export default class HomeScreen extends Phaser.Scene {
 		if (this.rightPixel != null) {
 			this.rightPixel.update();
 			this.rightPixel.lockTo(this.mouseX + this.rightPixelOffset.x, this.mouseY + this.rightPixelOffset.y);
-			this.magicWand.lockTo(this.mouseX, this.mouseY);
 		}
+		this.magicWand.lockTo(this.mouseX, this.mouseY);
 
 		if (this.input.keyboard.checkDown(this.resetKey, 1000)) this.reset();
 		if (this.input.keyboard.checkDown(this.hitKey, 250)) {
