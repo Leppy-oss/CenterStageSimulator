@@ -75,6 +75,7 @@ Pixel.prototype.activeOn = function() {
 
 Pixel.prototype.update = function() {
 	this.updateBody();
+	this.pixel.setPosition(this.body.position.x, this.body.position.y);
 	this.pixel.update();
 	this.idText.setPosition(this.body.position.x - this.idText.width / 2, this.body.position.y - this.idText.height / 2);
 	// pixel is out of bounds

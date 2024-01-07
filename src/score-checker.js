@@ -24,7 +24,6 @@ export default function ScoreChecker(game) {
 	 * @type {Array<Phaser.GameObjects.Line>}
 	 */
 	this.lines = [];
-	this.createLine(50, 50, 100, 100, 0xff0000);
 }
 
 /**
@@ -32,12 +31,19 @@ export default function ScoreChecker(game) {
  * @returns {Object} Score breakdown for the given pixels on the backdrop; pixels still in motion are ignored
  */
 ScoreChecker.prototype.checkScore = function(pixelList) {
+	this.destroyLines();
 	this.pixels = pixelList;
 	this.adjacencyList = this.constructEmptyAdjacencyList();
 	this.constructAdjacencyList();
 	this.visitedBfs = new Set();
 	var numMosaics = 0;
-	for (let i = 0; i < this.pixels.length; i++) numMosaics += this.bfs(i);
+	var prevI = 0;
+	for (let i = 0; i < this.pixels.length; i++) {
+		this.createLine(0, 0, 100, 100, 0xff0000);
+		this.createLine(this.pixels[prevI].pixel.x, this.pixels[prevI].pixel.y, this.pixels[i].pixel.x, this.pixels[i].pixel.y, 0xff0000);
+		numMosaics += this.bfs(i);
+		prevI = i.valueOf();
+	}
 	return {
 		npixels: this.pixels.length,
 		nmosaics: numMosaics,
@@ -66,6 +72,7 @@ ScoreChecker.prototype.bfs = function(start) {
 	let mosaics = 0;
 	while (queue.length) {
 		const node = queue.shift();
+		// console.log(node, prevNode);
 		if (!this.visitedBfs.has(node)) {
 			this.visitedBfs.add(node);
 			if (this.adjacencyList[node].length == 2) {
@@ -79,9 +86,8 @@ ScoreChecker.prototype.bfs = function(start) {
 					if (this.adjacencyList[node1].length == 2 && this.adjacencyList[node2].length == 2) mosaics++;
 				}
 			}
-			for (const neighbor of this.adjacencyList[node]) this.visitedBfs.add(neighbor);
-
 			for (const neighbor of this.adjacencyList[node]) {
+				this.visitedBfs.add(neighbor);
 				queue.push(neighbor);
 			}
 		}
@@ -113,6 +119,7 @@ ScoreChecker.prototype.constructEmptyAdjacencyList = function() {
 
 ScoreChecker.prototype.floodFill = function(i, j, fromI, fromJ) {
 	if (this.empty(i, j)) return;
+	if (this.wrongColor(i, j)) return;
 	if (this.board[fromI][fromJ] > -1 && this.board[i][j] > -1 && (fromI != i || fromJ != j) && this.adjacencyList[this.board[fromI][fromJ]].find((value) => value == this.board[i][j]) === undefined) {
 		this.adjacencyList[this.board[fromI][fromJ]].push(this.board[i][j]);
 		this.adjacencyList[this.board[i][j]].push(this.board[fromI][fromJ]);
@@ -134,6 +141,12 @@ ScoreChecker.prototype.floodFill = function(i, j, fromI, fromJ) {
 ScoreChecker.prototype.empty = function(i, j) {
 	if (i < 0 || j < 0 || i > maxHeight - 1 || j > maxWidth - 1) return true;
 	if (this.board[i][j] < 0) return true;
+}
+
+/**
+ * Floodfill companion ScoreChecker.prototype.to check if the slot on the backdrop is invalid for further filling
+ */
+ScoreChecker.prototype.wrongColor = function(i, j) {
 	return this.pixels[this.board[i][j]].color == 'white';
 }
 
@@ -175,17 +188,17 @@ ScoreChecker.prototype.calculateIndex = function(pixel) {
 }
 
 ScoreChecker.prototype.createLine = function(x1, y1, x2, y2, color) {
-	this.lines.push(this.game.add.line(x1, y1, x1, y1, x2, y2, color, 1).setStrokeStyle(5).setVisible(true));
+	console.log(x1, y1, x2, y2);
+	this.lines.push(this.game.add.line(x1, y1, x1, y1, x2, y2, color, 0.5).setOrigin(0).setLineWidth(2).setVisible(true));
 }
 
 ScoreChecker.prototype.update = function() {
-	this.lines.forEach((line) => {
-		line.update();
-	});
+	this.lines.forEach((line) => line.update());
 }
 
 ScoreChecker.prototype.destroyLines = function() {
 	this.lines.forEach((line) => {
 		line.setVisible(false).destroy();
 	});
+	this.lines = [];
 }
