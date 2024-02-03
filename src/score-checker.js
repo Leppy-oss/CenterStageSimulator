@@ -10,7 +10,7 @@ const maxWidth = 13,
 export default function ScoreChecker(game) {
 	this.game = game;
 	/**
-	 * @type {Array<Array<Number>}
+	 * @type {Array<Array<Number>>}
 	 */
 	this.adjacencyList = [];
 	/**
@@ -38,12 +38,14 @@ ScoreChecker.prototype.checkScore = function(pixelList) {
 	this.visitedBfs = new Set();
 	var numMosaics = 0;
 	var prevI = 0;
+	/*
 	for (let i = 0; i < this.pixels.length; i++) {
 		this.createLine(0, 0, 100, 100, 0xff0000);
 		this.createLine(this.pixels[prevI].pixel.x, this.pixels[prevI].pixel.y, this.pixels[i].pixel.x, this.pixels[i].pixel.y, 0xff0000);
 		numMosaics += this.bfs(i);
 		prevI = i.valueOf();
 	}
+	*/
 	return {
 		npixels: this.pixels.length,
 		nmosaics: numMosaics,
