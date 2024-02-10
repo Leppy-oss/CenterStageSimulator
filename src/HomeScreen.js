@@ -312,12 +312,14 @@ export default class HomeScreen extends Phaser.Scene {
 		this.pixels.forEach(pixel => {
 			pixel.destroy();
 		});
+		this.pixels = [];
 		this.changeLeftColor(0, false);
 		this.changeRightColor(0, false);
 		if (this.leftPixel != null) this.leftPixel.destroy();
 		if (this.rightPixel != null) this.rightPixel.destroy();
 		this.leftPixel = this.createNewPixel(true);
 		this.rightPixel = this.createNewPixel(false);
+		this.magicWand.off();
 		this.sound.play('reset');
 		this.calcScore();
 	}
