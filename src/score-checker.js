@@ -75,13 +75,11 @@ ScoreChecker.prototype.checkLines = function() {
  * @returns {Number} Number of mosaics detected using BFS on the non-white pixel adjaacency list
  */
 ScoreChecker.prototype.bfs = function(start) {
-	console.log(this.lines.length)
 	const queue = [start];
 	let mosaics = 0;
 	let prevNode = start;
 	while (queue.length) {
 		const node = queue.shift();
-		// console.log(node, prevNode);
 		if (!this.visitedBfs.has(node)) {
 			this.visitedBfs.add(node);
 			if (this.adjacencyList[node].length == 2) {
@@ -228,7 +226,6 @@ ScoreChecker.prototype.calculateIndex = function(pixel) {
 }
 
 ScoreChecker.prototype.createLine = function(x1, y1, x2, y2, delay) {
-	console.log('Delay: ' + delay);
 	this.lineVisualizations.push({
 		callback: () => this.lines.push(this.game.add.line(0, 0, x1, y1, x2, y2, lineColor, 0.5).setOrigin(0).setLineWidth(2).setVisible(true)),
 		time: new Date().getTime() + delay
@@ -241,7 +238,6 @@ ScoreChecker.prototype.createMosaicLine = function(x1, y1, x2, y2) {
 
 ScoreChecker.prototype.update = function() {
 	for (var i = 0; i < this.lineVisualizations.length; i++) {
-		// console.log('Timestamp dt: ' + (new Date().getTime() - this.lineVisualizations[i].time))
 		if (new Date().getTime() > this.lineVisualizations[i].time) {
 			this.lineVisualizations[i].callback();
 			this.lineVisualizations.splice(i, 1);

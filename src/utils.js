@@ -46,7 +46,6 @@ export function numberToColorHsl(i, min, max) {
 	// we convert the input to the appropriate hue value
 	var hue = ratio * 1.2 / 3.60;
 	//if (minMaxFactor!=1) hue /= minMaxFactor;
-	//console.log(hue);
 
 	// we convert hsl to rgb (saturation 100%, lightness 50%)
 	var rgb = hslToRgb(hue, 1, 0.5);
