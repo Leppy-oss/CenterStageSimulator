@@ -4,11 +4,13 @@
 
 ## Tech Stack
 Built on:
-> Phaser.js
-> Matter.js
-> Vite.js
-> Ably
-> PostCSS
+<ul>
+  <li>Vite</li>
+  <li>Ably</li>
+  <li>Phaser3</li>
+  <li>Matter.js</li>
+  <li>PostCSS</li>
+</ul>
 
 ![License](https://img.shields.io/badge/license-MIT-green)
 
@@ -17,22 +19,28 @@ Built on:
 Using Matter.js and hexagonal rigid bodies, this simulator perfectly replicates the bouncing behavior of pixels on the real CenterStage backdrop. You can even hit the backdrop like in real life to shake the pixels!
 
 ### Real-World Contraints
-> Both pixels must be dropped before a new cycle can take place.
-> The left and right pixels cannot be closer than a real-world claw/drillbit design would allow
-> To simulate actual cycles, pixel colors cannot be changed after dropping the first pixel. Decide what pixels to place before dropping them!
+<ul>
+  <li>Both pixels must be dropped before a new cycle can take place.</li>
+  <li>The left and right pixels cannot be closer than a real-world design would allow.</li>
+  <li>To simulate actual cycles, pixel colors cannot be changed after dropping the first pixel. Decide what pixels to place before dropping them!</li>
+</ul>
 
 ### Advanced Features
-> Magic wand to manipulate pixels
-> Audio config
-> Score breakdown and "connectedness" visualization using graph theory
+<ul>
+  <li>Magic wand to manipulate pixels</li>
+  <li>Audio config</li>
+  <li>Real-time score calculation and mosaic, connection visualization using graph theory</li>
+</ul>
 
 ## Controls
-> R: Reset all pixels
-> SPACE: Hit/disturb the backdrop
-> W/A/S/D: Manipulate the left pixel
-> I/J/K/L: Manipulate the Right pixel
-> LEFT/RIGHT CLICK: Drop the corresponding pixel
-> LEFT/RIGHT ARROW: Cycles through colors for the corresponding pixel
+<ul>
+  <li>R: Reset all pixels</li>
+  <li>SPACE: Hit/disturb the backdrop</li>
+  <li>W/A/S/D: Manipulate the left pixel</li>
+  <li>I/J/K/L: Manipulate the Right pixel</li>
+  <li>LEFT/RIGHT CLICK: Drop the corresponding pixel</li>
+  <li>LEFT/RIGHT ARROW: Cycles through colors for the corresponding pixel</li>
+</ul>
 
 ## License
 [MIT License](https://github.com/ourcade/phaser3-vite-template/blob/master/LICENSE)
