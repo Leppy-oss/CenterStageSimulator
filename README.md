@@ -1,6 +1,6 @@
 # Center Stage Simulator
 > Open-source simulator for the 2023-2024 CenterStage season of FTC (FIRST Tech Challenge), produced by FTC Team 8565 Technicbots.
-> Try it out [here](https://link-url-here.org](https://center-stage-simulator.vercel.app/)!
+> Try it out [here](https://center-stage-simulator.vercel.app)!
 
 ## Tech Stack
 Built on:
